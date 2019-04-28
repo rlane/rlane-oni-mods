@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatingElement", "HeatingElement\HeatingElement.csproj", "{28280EC2-BD5F-4D8C-A6E3-7F712B449455}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28280EC2-BD5F-4D8C-A6E3-7F712B449455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28280EC2-BD5F-4D8C-A6E3-7F712B449455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28280EC2-BD5F-4D8C-A6E3-7F712B449455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28280EC2-BD5F-4D8C-A6E3-7F712B449455}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1686D708-0EDF-4050-A9AE-0239D71151B8}
+	EndGlobalSection
+EndGlobal
