@@ -9,7 +9,7 @@ class HeatingElementConfig : IBuildingConfig
     {
         int width = 1;
         int height = 1;
-        string anim = "ventgas_kanim";
+        string anim = "gas_germs_sensor_kanim";
         int hitpoints = 30;
         float construction_time = 30f;
         float[] construction_mass = BUILDINGS.CONSTRUCTION_MASS_KG.TIER4;
@@ -38,14 +38,21 @@ public class HeatingElementStateMachine : GameStateMachine<HeatingElementStateMa
     public State Off;
     public State On;
 
+    private static readonly HashedString[] ON_ANIMS = new HashedString[2] { "on_pre", "on_loop" };
+    private static readonly HashedString[] OFF_ANIMS = new HashedString[2] { "on_pst", "off" };
+
     public override void InitializeStates(out BaseState defaultState)
     {
         defaultState = Off;
 
         Off
+            .Enter("SetInactive", smi => smi.GetComponent<KBatchedAnimController>().Play(OFF_ANIMS))
             .EventTransition(GameHashes.OperationalChanged, On, smi => smi.GetComponent<Operational>().IsOperational);
         On
-            .Enter("SetActive", smi => smi.GetComponent<Operational>().SetActive(true, false))
+            .Enter("SetActive", smi => {
+                smi.GetComponent<KBatchedAnimController>().Play(ON_ANIMS, KAnim.PlayMode.Loop);
+                smi.GetComponent<Operational>().SetActive(true, false);
+            })
             .EventTransition(GameHashes.OperationalChanged, Off, smi => !smi.GetComponent<Operational>().IsOperational);
     }
 
