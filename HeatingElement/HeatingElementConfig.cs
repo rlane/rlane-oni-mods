@@ -14,12 +14,12 @@ class HeatingElementConfig : IBuildingConfig
         float construction_time = 30f;
         float[] construction_mass = BUILDINGS.CONSTRUCTION_MASS_KG.TIER4;
         float melting_point = 3200f;
-        BuildingDef buildingDef = BuildingTemplates.CreateBuildingDef(ID, width, height, anim, hitpoints, construction_time, construction_mass, MATERIALS.ALL_METALS, melting_point, BuildLocationRule.Anywhere, BUILDINGS.DECOR.PENALTY.TIER1, NOISE_POLLUTION.NONE);
+        BuildingDef buildingDef = BuildingTemplates.CreateBuildingDef(ID, width, height, anim, hitpoints, construction_time, construction_mass, MATERIALS.REFINED_METALS, melting_point, BuildLocationRule.Anywhere, BUILDINGS.DECOR.PENALTY.TIER1, NOISE_POLLUTION.NONE);
         buildingDef.RequiresPowerInput = true;
         buildingDef.Floodable = false;
         buildingDef.EnergyConsumptionWhenActive = 240f;
         buildingDef.ExhaustKilowattsWhenActive = 0f;
-        buildingDef.SelfHeatKilowattsWhenActive = 1016f;
+        buildingDef.SelfHeatKilowattsWhenActive = 1016f;  // Same efficiency as a Liquid Tepidizer.
         buildingDef.ViewMode = OverlayModes.Power.ID;
         buildingDef.AudioCategory = "SolidMetal";
         buildingDef.Overheatable = false;

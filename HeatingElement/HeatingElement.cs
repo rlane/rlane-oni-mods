@@ -10,8 +10,8 @@ namespace HeatingElement
         private static void Prefix()
         {
             Strings.Add("STRINGS.BUILDINGS.PREFABS.HEATINGELEMENT.NAME", "Heating Element");
-            Strings.Add("STRINGS.BUILDINGS.PREFABS.HEATINGELEMENT.DESC", "Heating Element.");
-            Strings.Add("STRINGS.BUILDINGS.PREFABS.HEATINGELEMENT.EFFECT", "Produces heat using electricity.");
+            Strings.Add("STRINGS.BUILDINGS.PREFABS.HEATINGELEMENT.DESC", "Heating Elements will quickly melt if used without caution.");
+            Strings.Add("STRINGS.BUILDINGS.PREFABS.HEATINGELEMENT.EFFECT", "Produces a large amount of Heat.");
 
             ModUtil.AddBuildingToPlanScreen("Utilities", HeatingElementConfig.ID);
         }
