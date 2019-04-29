@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace HeatingElement
 {
     [HarmonyPatch(typeof(GeneratedBuildings), "LoadGeneratedBuildings")]
-    internal class HeatingElement_GeneratedBuildings_LoadGeneratedBuildings
+    internal class GeneratedBuildings_LoadGeneratedBuildings
     {
         private static void Prefix()
         {
@@ -18,7 +18,7 @@ namespace HeatingElement
     }
 
     [HarmonyPatch(typeof(Db), "Initialize")]
-    internal class HeatingElement_Db_Initialize
+    internal class Db_Initialize
     {
         private static void Prefix(Db __instance)
         {
