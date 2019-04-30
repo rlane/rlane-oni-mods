@@ -19,7 +19,14 @@ class HeatingElementConfig : IBuildingConfig
         buildingDef.Floodable = false;
         buildingDef.EnergyConsumptionWhenActive = 240f;
         buildingDef.ExhaustKilowattsWhenActive = 0f;
-        buildingDef.SelfHeatKilowattsWhenActive = 1016f;  // Same efficiency as a Liquid Tepidizer.
+        // We don't want to create an infinite power source using a Heat
+        // Element and a Steam Turbine. Set the heat output so that system
+        // would be just short of breaking even.
+        // water_specific_heat = 4179 J/kg/C
+        // turbine_heat_consumption (W) = 2 kg/s * (473.15 C - 368.15 C) * water_specific_heat
+        // turbine_heat_watt_per_electric_watt = turbine_heat_consumption / 850 W = 1032.46
+        // 240 W * turbine_heat_watt_per_electric_watt = 247790 W
+        buildingDef.SelfHeatKilowattsWhenActive = 247.790f;
         buildingDef.ViewMode = OverlayModes.Power.ID;
         buildingDef.AudioCategory = "SolidMetal";
         buildingDef.Overheatable = false;
