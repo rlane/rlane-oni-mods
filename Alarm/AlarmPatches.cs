@@ -11,6 +11,10 @@ namespace rlane
             Strings.Add("STRINGS.BUILDINGS.PREFABS.ALARM.NAME", "Alarm");
             Strings.Add("STRINGS.BUILDINGS.PREFABS.ALARM.DESC", "");
             Strings.Add("STRINGS.BUILDINGS.PREFABS.ALARM.EFFECT", "Notifies you when activated,");
+            Strings.Add("STRINGS.BUILDING.STATUSITEMS.ALARM.NOTIFICATION_NAME", "Alarm");
+            Strings.Add("STRINGS.BUILDING.STATUSITEMS.ALARM.NOTIFICATION_TOOLTIP", "Alarm activated.");
+            Strings.Add("STRINGS.BUILDING.STATUSITEMS.ALARM.NAME", "Alarm!");
+            Strings.Add("STRINGS.BUILDING.STATUSITEMS.ALARM.TOOLTIP", "Alarm activated.");
             ModUtil.AddBuildingToPlanScreen("Automation", AlarmConfig.ID);
         }
     }
