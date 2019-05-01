@@ -17,12 +17,17 @@ namespace rlane
             float construction_time = 10f;
             float[] construction_mass = BUILDINGS.CONSTRUCTION_MASS_KG.TIER1;
             float melting_point = 800f;
-            BuildingDef buildingDef = BuildingTemplates.CreateBuildingDef(ID, width, height, anim, hitpoints, construction_time, construction_mass, MATERIALS.REFINED_METALS, melting_point, BuildLocationRule.OnFloor, BUILDINGS.DECOR.NONE, NOISE_POLLUTION.NONE);
+            BuildingDef buildingDef = BuildingTemplates.CreateBuildingDef(ID, width, height, anim, hitpoints, construction_time, construction_mass, MATERIALS.REFINED_METALS, melting_point, BuildLocationRule.OnFloor, BUILDINGS.DECOR.NONE, NOISE_POLLUTION.NOISY.TIER6);
             buildingDef.RequiresPowerInput = true;
             buildingDef.EnergyConsumptionWhenActive = 10f;
             buildingDef.ViewMode = OverlayModes.Logic.ID;
             buildingDef.AudioCategory = "Metal";
             return buildingDef;
+        }
+
+        public override void ConfigureBuildingTemplate(GameObject go, Tag prefab_tag)
+        {
+            go.AddOrGet<LoopingSounds>();
         }
 
         public override void DoPostConfigurePreview(BuildingDef def, GameObject go)
@@ -65,6 +70,7 @@ namespace rlane
                 .EventTransition(GameHashes.OperationalChanged, On, smi => smi.GetComponent<Operational>().IsOperational);
             On
                 .PlayAnim("on")
+                .ToggleLoopingSound(GlobalAssets.GetSound("YellowAlert_LP"))
                 .Enter("SetActive", smi =>
                 {
                     smi.GetComponent<Operational>().SetActive(true, false);
