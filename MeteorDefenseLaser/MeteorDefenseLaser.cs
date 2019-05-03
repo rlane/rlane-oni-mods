@@ -16,7 +16,7 @@ namespace rlane
     {
         public const string ID = "MeteorDefenseLaser";
 
-        private const int RANGE = 20;
+        private const int RANGE = 40;
 
         public override BuildingDef CreateBuildingDef()
         {
