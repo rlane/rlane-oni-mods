@@ -1,8 +1,7 @@
 ﻿// TODO: Consume energy
-// TODO: Spawn liquid
-// TODO: Take specific heat and mass of meteor into account
 // TODO: Change color of the building
 // TODO: Make beam longer
+// TODO: Disable when broken/entombed/etc.
 
 using System.Collections.Generic;
 using TUNING;
@@ -15,8 +14,11 @@ namespace rlane
     public class MeteorDefenseLaserConfig : IBuildingConfig
     {
         public const string ID = "MeteorDefenseLaser";
-
         private const int RANGE = 40;
+        // Worst case heat needed: 2 GJ. Rock comets require far more heat than others. Allow 2s firing time.
+        private const float LASER_HEAT_PRODUCTION = 2e9f / 2;
+        // Standard-ish multiplier from electrity to heat.
+        private const float LASER_ELECTRICITY_CONSUMPTION = LASER_HEAT_PRODUCTION / 1000;
 
         public override BuildingDef CreateBuildingDef()
         {
@@ -57,6 +59,8 @@ namespace rlane
             go.AddOrGet<LogicOperationalController>();
             var defender = go.AddOrGet<MeteorDefenseLaser>();
             defender.range = RANGE;
+            defender.laser_heat_production = LASER_HEAT_PRODUCTION;
+            defender.laser_electricity_consumption = LASER_ELECTRICITY_CONSUMPTION;
             AddVisualizer(go, movable: false);
         }
 
@@ -117,6 +121,8 @@ namespace rlane
 
         public float range;
         public bool firing = false;
+        public float laser_heat_production;
+        public float laser_electricity_consumption;
         private KBatchedAnimController arm_anim_ctrl;
         public GameObject arm_go;
         private KAnimLink link;
@@ -179,15 +185,33 @@ namespace rlane
 
         private void FireAt(Comet comet, float dt)
         {
-            Debug.Log("RLL defender " + this + " at " + PosMin() + " attacking comet " + comet + " at " + comet.PosMin());
             var primary_element = comet.gameObject.GetComponent<PrimaryElement>();
-            primary_element.SetMassTemperature(primary_element.Mass, primary_element.Temperature + dt * 5000);
-            ShowDamageFx(comet.transform.position);
-            if (primary_element.Temperature > primary_element.Element.highTemp)
+            var heat_energy = laser_heat_production * dt;
+            // Use half the heat to ablate the meteor and the rest to warm it.
+            var burn_heat_energy = 0.5f * heat_energy;
+            var warm_heat_energy = heat_energy - burn_heat_energy;
+            GameUtil.DeltaThermalEnergy(primary_element, warm_heat_energy / 1000/*KJ*/);
+            var mass_removed = burn_heat_energy / (1000 * primary_element.Element.specificHeatCapacity * (primary_element.Element.highTemp - primary_element.Temperature));
+
+            int cell = Grid.PosToCell(comet.transform.gameObject);
+            int liquid_element_index = ElementLoader.GetElementIndex(primary_element.Element.highTempTransitionTarget);
+            if (primary_element.Temperature > primary_element.Element.highTemp || primary_element.Mass <= mass_removed)
             {
-                Debug.Log("RLL melted " + comet + " at " + comet.PosMin());
-                Explode(comet);
+                if (ValidCell(cell))
+                {
+                    FallingWater.instance.AddParticle(cell, (byte)liquid_element_index, primary_element.Mass, primary_element.Element.highTemp, byte.MaxValue, 0, skip_sound: true);
+                }
+                ShowExplosion(comet);
                 Util.KDestroyGameObject(comet.gameObject);
+            }
+            else
+            {
+                if (ValidCell(cell))
+                {
+                    FallingWater.instance.AddParticle(cell, (byte)liquid_element_index, mass_removed, primary_element.Element.highTemp, byte.MaxValue, 0, skip_sound: true);
+                }
+                primary_element.SetMassTemperature(primary_element.Mass - mass_removed, primary_element.Temperature);
+                ShowDamageFx(comet.transform.position);
             }
 
             float sqrMagnitude = (Vec3To2D(comet.transform.position) - Vec3To2D(transform.position)).sqrMagnitude;
@@ -224,10 +248,9 @@ namespace rlane
             arm_go.transform.rotation = Quaternion.Euler(0f, 0f, arm_rot);
         }
 
-        public void Explode(Comet comet)
+        public void ShowExplosion(Comet comet)
         {
             var position = comet.transform.GetPosition();
-            //var primary_element = comet.gameObject.GetComponent<PrimaryElement>();
             string sound = GlobalAssets.GetSound("Meteor_Large_Impact");
             if (CameraController.Instance.IsAudibleSound(position, sound))
             {
@@ -238,13 +261,9 @@ namespace rlane
             var fx_position = position;
             fx_position.z = Grid.GetLayerZ(Grid.SceneLayer.FXFront2);
             var cell = Grid.PosToCell(fx_position);
-            if (cell >= 0 && cell < Grid.CellCount)
+            if (ValidCell(cell))
             {
                 Game.Instance.SpawnFX(comet.explosionEffectHash, fx_position, 0f);
-            }
-            else
-            {
-                Debug.Log("RLL bad cell at " + fx_position);
             }
         }
 
@@ -256,6 +275,11 @@ namespace rlane
             {
                 Game.Instance.SpawnFX(SpawnFXHashes.BuildingSpark, position, 0f);
             }
+        }
+
+        public bool ValidCell(int cell)
+        {
+            return cell >= 0 && cell < Grid.CellCount;
         }
     }
 }
