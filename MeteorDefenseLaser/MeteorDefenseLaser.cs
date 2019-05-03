@@ -1,13 +1,14 @@
-﻿// TODO: Consume energy
-// TODO: Change color of the building
+﻿// TODO: Change color of the building
 // TODO: Make beam longer
 // TODO: Disable when broken/entombed/etc.
+// TODO: Add energy meter.
 
 using System.Collections.Generic;
 using TUNING;
 using UnityEngine;
 using System.Linq;
 using FMOD.Studio;
+using KSerialization;
 
 namespace rlane
 {
@@ -15,10 +16,9 @@ namespace rlane
     {
         public const string ID = "MeteorDefenseLaser";
         private const int RANGE = 40;
-        // Worst case heat needed: 2 GJ. Rock comets require far more heat than others. Allow 2s firing time.
-        private const float LASER_HEAT_PRODUCTION = 2e9f / 2;
-        // Standard-ish multiplier from electrity to heat.
-        private const float LASER_ELECTRICITY_CONSUMPTION = LASER_HEAT_PRODUCTION / 1000;
+        private const float LASER_ELECTRICITY_CONSUMPTION = 20e3f;
+        private const float LASER_HEAT_PRODUCTION = LASER_ELECTRICITY_CONSUMPTION * 1000;
+        private const float ELECTRICITY_STORAGE_SECONDS = 5;
 
         public override BuildingDef CreateBuildingDef()
         {
@@ -26,7 +26,7 @@ namespace rlane
             buildingDef.Floodable = false;
             buildingDef.AudioCategory = "Metal";
             buildingDef.RequiresPowerInput = true;
-            buildingDef.EnergyConsumptionWhenActive = 120f;
+            buildingDef.EnergyConsumptionWhenActive = 1000f;
             buildingDef.ExhaustKilowattsWhenActive = 0f;
             buildingDef.SelfHeatKilowattsWhenActive = 2f;
             buildingDef.PermittedRotations = PermittedRotations.R360;
@@ -61,7 +61,10 @@ namespace rlane
             defender.range = RANGE;
             defender.laser_heat_production = LASER_HEAT_PRODUCTION;
             defender.laser_electricity_consumption = LASER_ELECTRICITY_CONSUMPTION;
+            defender.electricity_capacity = LASER_ELECTRICITY_CONSUMPTION * ELECTRICITY_STORAGE_SECONDS;
             AddVisualizer(go, movable: false);
+            go.AddOrGet<EnergyConsumerSelfSustaining>();
+            go.AddOrGet<KSelectable>();
         }
 
         private static void AddVisualizer(GameObject prefab, bool movable)
@@ -119,6 +122,15 @@ namespace rlane
         [MyCmpGet]
         private Rotatable rotatable;
 
+        [MyCmpReq]
+        private Operational operational;
+
+        [MyCmpReq]
+        private KSelectable selectable;
+
+        [MyCmpReq]
+        private EnergyConsumerSelfSustaining energyConsumer;
+
         public float range;
         public bool firing = false;
         public float laser_heat_production;
@@ -128,6 +140,9 @@ namespace rlane
         private KAnimLink link;
         private float arm_rot = 90f;
         private float turn_rate = 360f;
+        public float electricity_capacity;
+        [Serialize]
+        private float electricity_available;
 
         static Vector3 Vec3To2D(Vector3 v)
         {
@@ -158,12 +173,17 @@ namespace rlane
             arm_go.SetActive(value: true);
             link = new KAnimLink(component, arm_anim_ctrl);
             RotateArm(rotatable.GetRotatedOffset(Quaternion.Euler(0f, 0f, -arm_rot) * Vector3.up), warp: true, 0f);
+            energyConsumer.UpdatePoweredStatus();
+            operational.SetActive(true);
+            // TODO: Add a StatusItem.
+            //selectable.AddStatusItem(Db.Get().BuildingStatusItems.StoredCharge);
         }
 
         public void Sim33ms(float dt)
         {
+            ChargeCapacitor(dt);
             var comet = comet_tracker.GetClosestComet(transform.position, range);
-            if (comet != null && AimAt(comet, dt))
+            if (comet != null && AimAt(comet, dt) && HasEnoughElectricity(dt))
             {
                 FireAt(comet, dt);
                 if (!firing)
@@ -183,10 +203,45 @@ namespace rlane
             }
         }
 
+        public bool HasEnoughElectricity(float dt)
+        {
+            return electricity_available > laser_electricity_consumption * dt;
+        }
+
+        public void ChargeCapacitor(float dt)
+        {
+            Debug.Log("RLL dt=" + dt + " operational.IsOperational=" + operational.IsOperational + " operational.IsActive=" + operational.IsActive + " energyConsumer.IsExternallyPowered=" + energyConsumer.IsExternallyPowered + " electricity_available=" + electricity_available + " electricity_capacity=" + electricity_capacity + " energyConsumer.WattsUsed=" + energyConsumer.WattsUsed);
+            if (operational.IsOperational && energyConsumer.IsExternallyPowered && electricity_available < electricity_capacity)
+            {
+                operational.SetActive(true);
+                Debug.Log("RLL charging by " + energyConsumer.WattsUsed * dt);
+                electricity_available = Mathf.Min(electricity_capacity, electricity_available + energyConsumer.WattsUsed * dt);
+                energyConsumer.UpdatePoweredStatus();
+            } else
+            {
+                operational.SetActive(false);
+            }
+            energyConsumer.SetSustained(HasEnoughElectricity(dt));
+        }
+
         private void FireAt(Comet comet, float dt)
         {
+            float electricity_used = laser_electricity_consumption * dt;
+            if (electricity_available < electricity_used)
+            {
+                return;
+            }
+            electricity_available -= electricity_used;
+            energyConsumer.UpdatePoweredStatus();
+
             var primary_element = comet.gameObject.GetComponent<PrimaryElement>();
             var heat_energy = laser_heat_production * dt;
+            if (primary_element.Mass > 100)
+            {
+                // HACK: Rock comets are hundreds of times more massive than iron comets. Even with the electricity to heat multiplier we couldn't affect them. Boost heat production by 100x.
+                // Free energy if you can harvest it.
+                heat_energy *= 100;
+            }
             // Use half the heat to ablate the meteor and the rest to warm it.
             var burn_heat_energy = 0.5f * heat_energy;
             var warm_heat_energy = heat_energy - burn_heat_energy;
