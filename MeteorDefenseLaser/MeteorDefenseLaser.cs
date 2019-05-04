@@ -267,7 +267,7 @@ namespace rlane
             int liquid_element_index = ElementLoader.GetElementIndex(primary_element.Element.highTempTransitionTarget);
             if (primary_element.Temperature > primary_element.Element.highTemp || primary_element.Mass <= mass_removed)
             {
-                if (ValidCell(cell))
+                if (SafeCell(cell))
                 {
                     FallingWater.instance.AddParticle(cell, (byte)liquid_element_index, primary_element.Mass, primary_element.Element.highTemp, byte.MaxValue, 0, skip_sound: true);
                 }
@@ -276,7 +276,7 @@ namespace rlane
             }
             else
             {
-                if (ValidCell(cell))
+                if (SafeCell(cell))
                 {
                     FallingWater.instance.AddParticle(cell, (byte)liquid_element_index, mass_removed, primary_element.Element.highTemp, byte.MaxValue, 0, skip_sound: true);
                 }
@@ -331,7 +331,7 @@ namespace rlane
             var fx_position = position;
             fx_position.z = Grid.GetLayerZ(Grid.SceneLayer.FXFront2);
             var cell = Grid.PosToCell(fx_position);
-            if (ValidCell(cell))
+            if (SafeCell(cell))
             {
                 Game.Instance.SpawnFX(comet.explosionEffectHash, fx_position, 0f);
             }
@@ -341,10 +341,19 @@ namespace rlane
         {
             position.z = Grid.GetLayerZ(Grid.SceneLayer.FXFront2);
             var cell = Grid.PosToCell(position);
-            if (cell >= 0 && cell < Grid.CellCount)
+            if (SafeCell(cell))
             {
                 Game.Instance.SpawnFX(SpawnFXHashes.BuildingSpark, position, 0f);
             }
+        }
+
+        // HACK: FX and FallingWater can cause crashes if spawned near the edge of the grid.
+        public bool SafeCell(int cell)
+        {
+            int x, y;
+            Grid.CellToXY(cell, out x, out y);
+            const int margin = 3;
+            return ValidCell(cell) && y < Grid.HeightInCells - margin && y > margin && x < Grid.WidthInCells - margin && x > margin;
         }
 
         public bool ValidCell(int cell)
