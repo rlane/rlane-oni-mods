@@ -16,9 +16,9 @@ namespace rlane
     {
         public const string ID = "MeteorDefenseLaser";
         private const int RANGE = 40;
-        private const float LASER_ELECTRICITY_CONSUMPTION = 20e3f;
+        private const float LASER_ELECTRICITY_CONSUMPTION = 10e3f;
         private const float LASER_HEAT_PRODUCTION = LASER_ELECTRICITY_CONSUMPTION * 1000;
-        private const float ELECTRICITY_STORAGE_SECONDS = 5;
+        private const float ELECTRICITY_STORAGE_SECONDS = 3;
 
         public override BuildingDef CreateBuildingDef()
         {
