@@ -118,6 +118,7 @@ namespace rlane
     public class MeteorDefenseLaser : KMonoBehaviour, ISim33ms
     {
         public static CometTracker comet_tracker = new CometTracker();
+        public static StatusItem charge_status = MakeStatusItem();
 
         [MyCmpGet]
         private Rotatable rotatable;
@@ -149,6 +150,20 @@ namespace rlane
             v.z = 0;
             return v;
         }
+        public static StatusItem MakeStatusItem()
+        {
+            var s = new StatusItem("LaserStoredCharge", "BUILDING", string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, allow_multiples: false, OverlayModes.None.ID);
+            s.resolveStringCallback = delegate (string str, object data)
+            {
+                MeteorDefenseLaser obj = (MeteorDefenseLaser)data;
+                if (obj != null)
+                {
+                    str = string.Format(str, GameUtil.GetFormattedRoundedJoules(obj.electricity_available), GameUtil.GetFormattedRoundedJoules(obj.electricity_capacity));
+                }
+                return str;
+            };
+            return s;
+        }
 
         protected override void OnSpawn()
         {
@@ -175,8 +190,7 @@ namespace rlane
             RotateArm(rotatable.GetRotatedOffset(Quaternion.Euler(0f, 0f, -arm_rot) * Vector3.up), warp: true, 0f);
             energyConsumer.UpdatePoweredStatus();
             operational.SetActive(true);
-            // TODO: Add a StatusItem.
-            //selectable.AddStatusItem(Db.Get().BuildingStatusItems.StoredCharge);
+            selectable.AddStatusItem(charge_status, this);
         }
 
         public void Sim33ms(float dt)
@@ -217,7 +231,8 @@ namespace rlane
                 Debug.Log("RLL charging by " + energyConsumer.WattsUsed * dt);
                 electricity_available = Mathf.Min(electricity_capacity, electricity_available + energyConsumer.WattsUsed * dt);
                 energyConsumer.UpdatePoweredStatus();
-            } else
+            }
+            else
             {
                 operational.SetActive(false);
             }
