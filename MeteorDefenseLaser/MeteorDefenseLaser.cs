@@ -1,5 +1,4 @@
-﻿// TODO: Change color of the building
-// TODO: Make beam longer
+﻿// TODO: Make beam longer
 // TODO: Disable when broken/entombed/etc.
 // TODO: Add energy meter.
 
@@ -169,6 +168,7 @@ namespace rlane
         protected override void OnSpawn()
         {
             KBatchedAnimController component = GetComponent<KBatchedAnimController>();
+            component.TintColour = new Color(0.5f, 0.5f, 1.0f, 1.0f);
             string name = component.name + ".gun";
             arm_go = new GameObject(name);
             arm_go.SetActive(value: false);
@@ -180,6 +180,7 @@ namespace rlane
             arm_anim_ctrl.initialAnim = "gun";
             arm_anim_ctrl.isMovable = true;
             arm_anim_ctrl.sceneLayer = Grid.SceneLayer.TransferArm;
+            arm_anim_ctrl.TintColour = new Color(0.5f, 0.5f, 1.0f, 1.0f);
             component.SetSymbolVisiblity("gun_target", is_visible: false);
             bool symbolVisible;
             Vector4 column = component.GetSymbolTransform(new HashedString("gun_target"), out symbolVisible).GetColumn(3);
