@@ -254,7 +254,6 @@ namespace rlane
             if (primary_element.Mass > 100)
             {
                 // HACK: Rock comets are hundreds of times more massive than iron comets. Even with the electricity to heat multiplier we couldn't affect them. Boost heat production by 100x.
-                // Free energy if you can harvest it.
                 heat_energy *= 100;
             }
             // Use half the heat to ablate the meteor and the rest to warm it.
@@ -263,23 +262,13 @@ namespace rlane
             GameUtil.DeltaThermalEnergy(primary_element, warm_heat_energy / 1000/*KJ*/);
             var mass_removed = burn_heat_energy / (1000 * primary_element.Element.specificHeatCapacity * (primary_element.Element.highTemp - primary_element.Temperature));
 
-            int cell = Grid.PosToCell(comet.transform.gameObject);
-            int liquid_element_index = ElementLoader.GetElementIndex(primary_element.Element.highTempTransitionTarget);
             if (primary_element.Temperature > primary_element.Element.highTemp || primary_element.Mass <= mass_removed)
             {
-                if (SafeCell(cell))
-                {
-                    FallingWater.instance.AddParticle(cell, (byte)liquid_element_index, primary_element.Mass, primary_element.Element.highTemp, byte.MaxValue, 0, skip_sound: true);
-                }
                 ShowExplosion(comet);
                 Util.KDestroyGameObject(comet.gameObject);
             }
             else
             {
-                if (SafeCell(cell))
-                {
-                    FallingWater.instance.AddParticle(cell, (byte)liquid_element_index, mass_removed, primary_element.Element.highTemp, byte.MaxValue, 0, skip_sound: true);
-                }
                 primary_element.SetMassTemperature(primary_element.Mass - mass_removed, primary_element.Temperature);
                 ShowDamageFx(comet.transform.position);
             }
@@ -347,7 +336,7 @@ namespace rlane
             }
         }
 
-        // HACK: FX and FallingWater can cause crashes if spawned near the edge of the grid.
+        // HACK: FX can cause crashes if spawned near the edge of the grid.
         public bool SafeCell(int cell)
         {
             int x, y;
