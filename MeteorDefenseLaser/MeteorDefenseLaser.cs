@@ -30,6 +30,8 @@ namespace rlane
             buildingDef.ExhaustKilowattsWhenActive = 0f;
             buildingDef.SelfHeatKilowattsWhenActive = 2f;
             buildingDef.PermittedRotations = PermittedRotations.R360;
+            buildingDef.Entombable = true;
+            buildingDef.Floodable = true;
             GeneratedBuildings.RegisterWithOverlay(OverlayScreen.SolidConveyorIDs, "AutoMiner");
             return buildingDef;
         }
@@ -38,7 +40,14 @@ namespace rlane
         {
             go.AddOrGet<Operational>();
             go.AddOrGet<LoopingSounds>();
-            go.AddOrGet<MiningSounds>();
+            go.AddOrGet<EnergyConsumerSelfSustaining>();
+            go.AddOrGet<KSelectable>();
+            go.AddOrGet<LogicOperationalController>();
+            var defender = go.AddOrGet<MeteorDefenseLaser>();
+            defender.range = RANGE;
+            defender.laser_heat_production = LASER_HEAT_PRODUCTION;
+            defender.laser_electricity_consumption = LASER_ELECTRICITY_CONSUMPTION;
+            defender.electricity_capacity = LASER_ELECTRICITY_CONSUMPTION * ELECTRICITY_STORAGE_SECONDS;
         }
 
         public override void DoPostConfigurePreview(BuildingDef def, GameObject go)
@@ -56,15 +65,7 @@ namespace rlane
         public override void DoPostConfigureComplete(GameObject go)
         {
             GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
-            go.AddOrGet<LogicOperationalController>();
-            var defender = go.AddOrGet<MeteorDefenseLaser>();
-            defender.range = RANGE;
-            defender.laser_heat_production = LASER_HEAT_PRODUCTION;
-            defender.laser_electricity_consumption = LASER_ELECTRICITY_CONSUMPTION;
-            defender.electricity_capacity = LASER_ELECTRICITY_CONSUMPTION * ELECTRICITY_STORAGE_SECONDS;
             AddVisualizer(go, movable: false);
-            go.AddOrGet<EnergyConsumerSelfSustaining>();
-            go.AddOrGet<KSelectable>();
         }
 
         private static void AddVisualizer(GameObject prefab, bool movable)
@@ -230,12 +231,12 @@ namespace rlane
                 operational.SetActive(true);
                 Debug.Log("RLL charging by " + energyConsumer.WattsUsed * dt);
                 electricity_available = Mathf.Min(electricity_capacity, electricity_available + energyConsumer.WattsUsed * dt);
-                energyConsumer.UpdatePoweredStatus();
             }
             else
             {
                 operational.SetActive(false);
             }
+            energyConsumer.UpdatePoweredStatus();
             energyConsumer.SetSustained(HasEnoughElectricity(dt));
         }
 
@@ -247,7 +248,6 @@ namespace rlane
                 return;
             }
             electricity_available -= electricity_used;
-            energyConsumer.UpdatePoweredStatus();
 
             var primary_element = comet.gameObject.GetComponent<PrimaryElement>();
             var heat_energy = laser_heat_production * dt;
