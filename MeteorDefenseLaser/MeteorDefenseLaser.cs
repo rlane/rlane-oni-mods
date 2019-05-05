@@ -1,5 +1,4 @@
-﻿// TODO: Disable when broken/entombed/etc.
-// TODO: Add energy meter.
+﻿// TODO: Play "on" animation.
 
 using System.Collections.Generic;
 using TUNING;
@@ -218,7 +217,7 @@ namespace rlane
         {
             ChargeCapacitor(dt);
             var comet = comet_tracker.GetClosestComet(transform.position, range);
-            if (comet != null && AimAt(comet, dt) && HasEnoughElectricity(dt))
+            if (comet != null && operational.IsOperational && AimAt(comet, dt) && HasEnoughElectricity(dt))
             {
                 FireAt(comet, dt);
                 if (!firing)
