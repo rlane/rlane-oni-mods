@@ -26,7 +26,7 @@ namespace rlane
             buildingDef.RequiresPowerInput = true;
             buildingDef.EnergyConsumptionWhenActive = 1000f;
             buildingDef.ExhaustKilowattsWhenActive = 0f;
-            buildingDef.SelfHeatKilowattsWhenActive = 2f;
+            buildingDef.SelfHeatKilowattsWhenActive = 10f;
             buildingDef.PermittedRotations = PermittedRotations.R360;
             buildingDef.Entombable = true;
             buildingDef.Floodable = true;
