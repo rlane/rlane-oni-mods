@@ -28,24 +28,12 @@ namespace rlane
             Database.Techs.TECH_GROUPING["SkyDetectors"] = (string[])ls.ToArray();
         }
     }
-
-    [HarmonyPatch(typeof(Comet), "Sim33ms")]
-    internal class MeteorDefenseLaser_Comet_Sim33ms
-    {
-        private static void Prefix(Comet __instance)
-        {
-            //Debug.Log("Simulating comet: " + __instance.ToString() + " at " + __instance.PosMin());
-            //MeteorDefenseLaser.comet_tracker.Track(__instance);
-        }
-    }
-
     
     [HarmonyPatch(typeof(Comet), "OnSpawn")]
     internal class MeteorDefenseLaser_Comet_OnSpawn
     {
         private static void Prefix(Comet __instance)
         {
-            Debug.Log("RLL Added comet: " + __instance.ToString() + " at " + __instance.PosMin());
             MeteorDefenseLaser.comet_tracker.Add(__instance);
         }
     }
@@ -56,7 +44,6 @@ namespace rlane
     {
         private static void Prefix(Comet __instance)
         {
-            Debug.Log("RLL Removed comet: " + __instance.ToString() + " at " + __instance.PosMin());
             MeteorDefenseLaser.comet_tracker.Remove(__instance);
         }
     }
