@@ -1,5 +1,4 @@
-﻿// TODO: Make beam longer
-// TODO: Disable when broken/entombed/etc.
+﻿// TODO: Disable when broken/entombed/etc.
 // TODO: Add energy meter.
 
 using System.Collections.Generic;
@@ -139,6 +138,8 @@ namespace rlane
         private KBatchedAnimController arm_anim_ctrl;
         public GameObject arm_go;
         private KAnimLink link;
+        public GameObject[] beam_segs = new GameObject[20];
+        const float beam_seg_length = 2.0f;
         private float arm_rot = 90f;
         private float turn_rate = 360f;
         public float electricity_capacity;
@@ -189,10 +190,28 @@ namespace rlane
             arm_go.transform.SetPosition(position);
             arm_go.SetActive(value: true);
             link = new KAnimLink(component, arm_anim_ctrl);
+            SetupBeam();
             RotateArm(rotatable.GetRotatedOffset(Quaternion.Euler(0f, 0f, -arm_rot) * Vector3.up), warp: true, 0f);
             energyConsumer.UpdatePoweredStatus();
             operational.SetActive(true);
             selectable.AddStatusItem(charge_status, this);
+        }
+
+        public void SetupBeam()
+        {
+            for (int i = 0; i < beam_segs.Length; i++)
+            {
+                var beam_seg = new GameObject(arm_anim_ctrl.name + ".beam.seg");
+                beam_seg.transform.SetParent(arm_go.transform);
+                beam_seg.transform.localPosition = new Vector3(0.0f, beam_seg_length * i, 0.0f);
+                beam_seg.transform.localRotation = Quaternion.Euler(0f, 0f, 90);
+                beam_seg.SetActive(value: false);
+                var beam_anim_ctrl = beam_seg.AddComponent<KBatchedAnimController>();
+                beam_anim_ctrl.AnimFiles = new KAnimFile[1] { Assets.GetAnim("laser_kanim") };
+                beam_anim_ctrl.TintColour = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+                beam_seg.SetActive(true);
+                beam_segs[i] = beam_seg;
+            }
         }
 
         public void Sim33ms(float dt)
@@ -206,6 +225,12 @@ namespace rlane
                 {
                     firing = true;
                     arm_anim_ctrl.Play("gun_digging", KAnim.PlayMode.Loop);
+                    foreach (var beam_seg in beam_segs)
+                    {
+                        var beam_anim_ctrl = beam_seg.GetComponent<KBatchedAnimController>();
+                        beam_anim_ctrl.enabled = true;
+                        beam_anim_ctrl.Play("idle", KAnim.PlayMode.Loop);
+                    }
                 }
             }
             else
@@ -213,6 +238,12 @@ namespace rlane
                 if (firing)
                 {
                     arm_anim_ctrl.Play("gun", KAnim.PlayMode.Loop);
+                    foreach (var beam_seg in beam_segs)
+                    {
+                        var beam_anim_ctrl = beam_seg.GetComponent<KBatchedAnimController>();
+                        beam_anim_ctrl.Stop();
+                        beam_anim_ctrl.enabled = false;
+                    }
                     firing = false;
                 }
                 firing = false;
@@ -276,6 +307,10 @@ namespace rlane
 
             float sqrMagnitude = (Vec3To2D(comet.transform.position) - Vec3To2D(transform.position)).sqrMagnitude;
             arm_anim_ctrl.GetBatchInstanceData().SetClipRadius(transform.position.x, transform.position.y, sqrMagnitude, do_clip: true);
+            foreach (var beam_seg in beam_segs)
+            {
+                beam_seg.GetComponent<KBatchedAnimController>().GetBatchInstanceData().SetClipRadius(arm_anim_ctrl.transform.position.x, arm_anim_ctrl.transform.position.y, sqrMagnitude, do_clip: true);
+            }
         }
 
         private bool AimAt(Comet comet, float dt)
