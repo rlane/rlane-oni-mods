@@ -1,4 +1,5 @@
 ﻿// TODO: Play "on" animation.
+// TODO: Add a kill counter.
 
 using System.Collections.Generic;
 using TUNING;
@@ -256,11 +257,9 @@ namespace rlane
 
         public void ChargeCapacitor(float dt)
         {
-            Debug.Log("RLL dt=" + dt + " operational.IsOperational=" + operational.IsOperational + " operational.IsActive=" + operational.IsActive + " energyConsumer.IsExternallyPowered=" + energyConsumer.IsExternallyPowered + " electricity_available=" + electricity_available + " electricity_capacity=" + electricity_capacity + " energyConsumer.WattsUsed=" + energyConsumer.WattsUsed);
             if (operational.IsOperational && energyConsumer.IsExternallyPowered && electricity_available < electricity_capacity)
             {
                 operational.SetActive(true);
-                Debug.Log("RLL charging by " + energyConsumer.WattsUsed * dt);
                 electricity_available = Mathf.Min(electricity_capacity, electricity_available + energyConsumer.WattsUsed * dt);
             }
             else
