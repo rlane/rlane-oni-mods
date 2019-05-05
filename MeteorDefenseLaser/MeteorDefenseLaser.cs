@@ -344,7 +344,7 @@ namespace rlane
         public void ShowExplosion(Comet comet)
         {
             var position = comet.transform.GetPosition();
-            string sound = GlobalAssets.GetSound("Meteor_Large_Impact");
+            string sound = GlobalAssets.GetSound(comet.impactSound);
             if (CameraController.Instance.IsAudibleSound(position, sound))
             {
                 EventInstance instance = KFMOD.BeginOneShot(sound, position);
