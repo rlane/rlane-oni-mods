@@ -18,6 +18,16 @@ Unlocked by Celestial Detection.
 
 Displays a notification when activated by the logic input.
 
+Colors:
+
+- Copper: Green
+- Iron: Red
+- Gold: Yellow
+- Tungsten: Blue
+- Steel: White
+- Niobium: Purple
+- Thermium: Orange
+
 Sample uses:
 
 - Water reservoir low.

@@ -44,6 +44,61 @@ namespace rlane
         {
             GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
             go.GetComponent<KPrefabID>().prefabInitFn += gameObject => new AlarmStateMachine.Instance(gameObject.GetComponent<KPrefabID>()).StartSM();
+            go.AddOrGetDef<LightController.Def>();
+            go.AddOrGet<Alarm>();
+        }
+    }
+
+    class Alarm : KMonoBehaviour
+    {
+        protected override void OnSpawn()
+        {
+            Light2D light2D = this.FindOrAddComponent<Light2D>();
+            light2D.overlayColour = LIGHT2D.FLOORLAMP_OVERLAYCOLOR;
+            light2D.Color = ColorForElement(GetComponent<PrimaryElement>().Element);
+            light2D.Range = 3f;
+            light2D.Angle = 0f;
+            light2D.Direction = LIGHT2D.LIGHTBUG_DIRECTION;
+            light2D.Offset = LIGHT2D.FLOORLAMP_OFFSET;
+            light2D.shape = LightShape.Circle;
+            light2D.drawOverlay = true;
+            light2D.Lux = 1800;
+        }
+
+        public Color ColorForElement(Element element)
+        {
+            if (element.id == SimHashes.Iron)
+            {
+                return new Color(10, 0, 0, 1);
+            }
+            else if (element.id == SimHashes.Copper)
+            {
+                return new Color(0, 10, 0, 1);
+            }
+            else if (element.id == SimHashes.Gold)
+            {
+                return new Color(10, 9.2f, 0.15f, 1);
+            }
+            else if (element.id == SimHashes.Tungsten)
+            {
+                return new Color(0, 0, 10, 1);
+            }
+            else if (element.id == SimHashes.Steel)
+            {
+                return new Color(10, 10, 10, 1);
+            }
+            else if (element.id == SimHashes.Niobium)
+            {
+                return new Color(10, 0, 10, 1);
+            }
+            else if (element.id == SimHashes.TempConductorSolid)
+            {
+                return new Color(10, 5, 0, 1);
+            }
+            else
+            {
+                return Color.clear;
+            }
         }
     }
 
