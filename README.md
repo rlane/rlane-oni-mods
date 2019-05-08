@@ -35,7 +35,7 @@ Sample uses:
 - Slimelung detected.
 - Temperature too high.
 
-Unlocked by Logic Circuits.
+Unlocked by Advanced Automation.
 
 ## Heating Element
 
