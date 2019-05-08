@@ -15,6 +15,8 @@ namespace rlane
             Strings.Add("STRINGS.BUILDING.STATUSITEMS.ALARM.NOTIFICATION_TOOLTIP", "Alarm activated.");
             Strings.Add("STRINGS.BUILDING.STATUSITEMS.ALARM.NAME", "Alarm!");
             Strings.Add("STRINGS.BUILDING.STATUSITEMS.ALARM.TOOLTIP", "Alarm activated.");
+            Strings.Add("STRINGS.UI.UISIDESCREENS.ALARM.TITLE", "Brightness");
+            Strings.Add("STRINGS.UI.UISIDESCREENS.ALARM.TOOLTIP", "Brightness");
             ModUtil.AddBuildingToPlanScreen("Automation", AlarmConfig.ID);
         }
     }

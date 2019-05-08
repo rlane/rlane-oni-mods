@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TUNING;
 using System.Collections.Generic;
+using KSerialization;
 
 namespace rlane
 {
@@ -46,6 +47,7 @@ namespace rlane
             go.GetComponent<KPrefabID>().prefabInitFn += gameObject => new AlarmStateMachine.Instance(gameObject.GetComponent<KPrefabID>()).StartSM();
             go.AddOrGetDef<LightController.Def>();
             go.AddOrGet<Alarm>();
+            go.AddOrGet<AlarmBrightnessSlider>();
         }
     }
 
@@ -55,7 +57,7 @@ namespace rlane
         {
             Light2D light2D = this.FindOrAddComponent<Light2D>();
             light2D.overlayColour = LIGHT2D.FLOORLAMP_OVERLAYCOLOR;
-            light2D.Color = ColorForElement(GetComponent<PrimaryElement>().Element);
+            light2D.Color = ColorForElement(GetComponent<PrimaryElement>().Element, GetComponent<AlarmBrightnessSlider>().brightness);
             light2D.Range = 3f;
             light2D.Angle = 0f;
             light2D.Direction = LIGHT2D.LIGHTBUG_DIRECTION;
@@ -65,40 +67,87 @@ namespace rlane
             light2D.Lux = 1800;
         }
 
-        public Color ColorForElement(Element element)
+        public Color ColorForElement(Element element, float brightness)
         {
             if (element.id == SimHashes.Iron)
             {
-                return new Color(10, 0, 0, 1);
+                return new Color(10 * brightness, 0, 0, 1);
             }
             else if (element.id == SimHashes.Copper)
             {
-                return new Color(0, 10, 0, 1);
+                return new Color(0, 10 * brightness, 0, 1);
             }
             else if (element.id == SimHashes.Gold)
             {
-                return new Color(10, 9.2f, 0.15f, 1);
+                return new Color(10 * brightness, 9.2f * brightness, 0.15f * brightness, 1);
             }
             else if (element.id == SimHashes.Tungsten)
             {
-                return new Color(0, 0, 10, 1);
+                return new Color(0, 0, 10 * brightness, 1);
             }
             else if (element.id == SimHashes.Steel)
             {
-                return new Color(10, 10, 10, 1);
+                return new Color(10 * brightness, 10 * brightness, 10 * brightness, 1);
             }
             else if (element.id == SimHashes.Niobium)
             {
-                return new Color(10, 0, 10, 1);
+                return new Color(10 * brightness, 0, 10 * brightness, 1);
             }
             else if (element.id == SimHashes.TempConductorSolid)
             {
-                return new Color(10, 5, 0, 1);
+                return new Color(10 * brightness, 5 * brightness, 0, 1);
             }
             else
             {
                 return Color.clear;
             }
+        }
+
+        public void SetBrightness(float brightness)
+        {
+            this.GetComponent<Light2D>().Color = ColorForElement(GetComponent<PrimaryElement>().Element, brightness);
+        }
+    }
+
+    [SerializationConfig(MemberSerialization.OptIn)]
+    class AlarmBrightnessSlider : KMonoBehaviour, ISingleSliderControl, ISliderControl
+    {
+        [Serialize]
+        public float brightness = 0.5f;
+
+        public string SliderTitleKey => "STRINGS.UI.UISIDESCREENS.ALARM.TITLE";
+
+        public string SliderUnits => STRINGS.UI.UNITSUFFIXES.PERCENT;
+
+        public int SliderDecimalPlaces(int index)
+        {
+            return 0;
+        }
+
+        public float GetSliderMin(int index)
+        {
+            return 0;
+        }
+
+        public float GetSliderMax(int index)
+        {
+            return 100;
+        }
+
+        public float GetSliderValue(int index)
+        {
+            return brightness * 100;
+        }
+
+        public void SetSliderValue(float percent, int index)
+        {
+            brightness = percent / 100;
+            GetComponent<Alarm>().SetBrightness(brightness);
+        }
+
+        public string GetSliderTooltipKey(int index)
+        {
+            return "STRINGS.UI.UISIDESCREENS.ALARM.TOOLTIP";
         }
     }
 
