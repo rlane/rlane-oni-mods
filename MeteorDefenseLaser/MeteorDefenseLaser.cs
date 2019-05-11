@@ -338,8 +338,8 @@ namespace rlane
 
         private bool AimAt(Comet comet, float dt)
         {
-            // TODO account for arm offset
-            Vector3 target_dir = Vector3.Normalize(Vec3To2D(comet.transform.position) - Vec3To2D(transform.position));
+            var arm_offset = rotatable.GetRotatedOffset(new Vector3(0, 1, 0));
+            Vector3 target_dir = Vector3.Normalize(Vec3To2D(comet.transform.position - transform.position - arm_offset));
             RotateArm(target_dir, warp: false, dt);
 
             int x, y, cx, cy;
