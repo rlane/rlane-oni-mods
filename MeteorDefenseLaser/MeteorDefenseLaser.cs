@@ -145,6 +145,9 @@ namespace rlane
         public float electricity_capacity;
         [Serialize]
         private float electricity_available;
+        private string rotateSound = "AutoMiner_rotate";
+        private bool rotate_sound_playing = false;
+        private LoopingSounds looping_sounds;
 
         static Vector3 Vec3To2D(Vector3 v)
         {
@@ -174,6 +177,8 @@ namespace rlane
             arm_go = new GameObject(name);
             arm_go.SetActive(value: false);
             arm_go.transform.parent = component.transform;
+            looping_sounds = arm_go.AddComponent<LoopingSounds>();
+            rotateSound = GlobalAssets.GetSound(rotateSound);
             KPrefabID kPrefabID = arm_go.AddComponent<KPrefabID>();
             kPrefabID.PrefabTag = new Tag(name);
             arm_anim_ctrl = arm_go.AddComponent<KBatchedAnimController>();
@@ -339,6 +344,32 @@ namespace rlane
             arm_rot += delta_angle;
             arm_rot = MathUtil.Wrap(-180f, 180f, arm_rot);
             arm_go.transform.rotation = Quaternion.Euler(0f, 0f, arm_rot);
+            if (Mathf.Approximately(target_angle, arm_rot))
+            {
+                StopRotateSound();
+            }
+            else
+            {
+                StartRotateSound();
+            }
+        }
+
+        private void StartRotateSound()
+        {
+            if (!rotate_sound_playing)
+            {
+                looping_sounds.StartSound(rotateSound);
+                rotate_sound_playing = true;
+            }
+        }
+
+        private void StopRotateSound()
+        {
+            if (rotate_sound_playing)
+            {
+                looping_sounds.StopSound(rotateSound);
+                rotate_sound_playing = false;
+            }
         }
 
         public void ShowExplosion(Comet comet)
