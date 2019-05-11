@@ -148,6 +148,10 @@ namespace rlane
         private string rotateSound = "AutoMiner_rotate";
         private bool rotate_sound_playing = false;
         private LoopingSounds looping_sounds;
+        public float overkill_time = 0.2f;
+        public float overkill_time_left;
+        public Color beam_tint = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+        public Comet target = null;
 
         static Vector3 Vec3To2D(Vector3 v)
         {
@@ -213,7 +217,7 @@ namespace rlane
                 beam_seg.SetActive(value: false);
                 var beam_anim_ctrl = beam_seg.AddComponent<KBatchedAnimController>();
                 beam_anim_ctrl.AnimFiles = new KAnimFile[1] { Assets.GetAnim("laser_kanim") };
-                beam_anim_ctrl.TintColour = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+                beam_anim_ctrl.TintColour = beam_tint;
                 beam_seg.AddComponent<LoopingSounds>();
                 beam_seg.SetActive(true);
                 beam_segs[i] = beam_seg;
@@ -227,19 +231,22 @@ namespace rlane
             if (comet != null && operational.IsOperational && AimAt(comet, dt) && HasEnoughElectricity(dt))
             {
                 FireAt(comet, dt);
-                if (!firing)
+                overkill_time_left = overkill_time;
+                if (!firing || (target != comet))
                 {
                     firing = true;
+                    target = comet;
                     arm_anim_ctrl.Play("gun_digging", KAnim.PlayMode.Loop);
                     foreach (var beam_seg in beam_segs)
                     {
                         var beam_anim_ctrl = beam_seg.GetComponent<KBatchedAnimController>();
                         beam_anim_ctrl.enabled = true;
+                        beam_anim_ctrl.TintColour = beam_tint;
                         beam_anim_ctrl.Play("idle", KAnim.PlayMode.Loop);
                     }
                 }
             }
-            else
+            else if (overkill_time_left <= dt)
             {
                 if (firing)
                 {
@@ -252,7 +259,19 @@ namespace rlane
                     }
                     firing = false;
                 }
-                firing = false;
+            }
+            else
+            {
+                if (overkill_time_left == overkill_time)
+                {
+                    arm_anim_ctrl.Play("gun", KAnim.PlayMode.Loop);
+                }
+                overkill_time_left -= dt;
+                foreach (var beam_seg in beam_segs)
+                {
+                    var beam_anim_ctrl = beam_seg.GetComponent<KBatchedAnimController>();
+                    beam_anim_ctrl.TintColour = beam_tint * new Color(1, 1, 1, (overkill_time_left + 0.1f) / (overkill_time + 0.1f));
+                }
             }
         }
 
