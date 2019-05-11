@@ -214,6 +214,7 @@ namespace rlane
                 var beam_anim_ctrl = beam_seg.AddComponent<KBatchedAnimController>();
                 beam_anim_ctrl.AnimFiles = new KAnimFile[1] { Assets.GetAnim("laser_kanim") };
                 beam_anim_ctrl.TintColour = new Color(1.0f, 0.5f, 0.5f, 1.0f);
+                beam_seg.AddComponent<LoopingSounds>();
                 beam_seg.SetActive(true);
                 beam_segs[i] = beam_seg;
             }
