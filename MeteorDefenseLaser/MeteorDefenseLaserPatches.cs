@@ -13,6 +13,8 @@ namespace rlane
             Strings.Add("STRINGS.BUILDINGS.PREFABS.METEORDEFENSELASER.EFFECT", "Blasts incoming meteors into smithereens.");
             Strings.Add("STRINGS.BUILDING.STATUSITEMS.LASERSTOREDCHARGE.NAME", "Power available: {0} of {1}.");
             Strings.Add("STRINGS.BUILDING.STATUSITEMS.LASERSTOREDCHARGE.TOOLTIP", "This building can store enough power to fire the laser for 3 seconds.");
+            Strings.Add("STRINGS.BUILDING.STATUSITEMS.LASERKILLS.NAME", "Kill count: {0}");
+            Strings.Add("STRINGS.BUILDING.STATUSITEMS.LASERKILLS.TOOLTIP", "Number of meteors destroyed.");
 
             ModUtil.AddBuildingToPlanScreen("Automation", MeteorDefenseLaserConfig.ID);
         }

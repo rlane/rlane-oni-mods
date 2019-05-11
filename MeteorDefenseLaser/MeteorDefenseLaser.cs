@@ -117,7 +117,8 @@ namespace rlane
     public class MeteorDefenseLaser : KMonoBehaviour, ISim33ms
     {
         public static CometTracker comet_tracker = new CometTracker();
-        public static StatusItem charge_status = MakeStatusItem();
+        public static StatusItem charge_status = MakeChargeStatusItem();
+        public static StatusItem kills_status = MakeKillsStatusItem();
 
         [MyCmpGet]
         private Rotatable rotatable;
@@ -152,13 +153,15 @@ namespace rlane
         public float overkill_time_left;
         public Color beam_tint = new Color(1.0f, 0.5f, 0.5f, 1.0f);
         public Comet target = null;
+        [Serialize]
+        public int kills = 0;
 
         static Vector3 Vec3To2D(Vector3 v)
         {
             v.z = 0;
             return v;
         }
-        public static StatusItem MakeStatusItem()
+        public static StatusItem MakeChargeStatusItem()
         {
             var s = new StatusItem("LaserStoredCharge", "BUILDING", string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, allow_multiples: false, OverlayModes.None.ID);
             s.resolveStringCallback = delegate (string str, object data)
@@ -167,6 +170,21 @@ namespace rlane
                 if (obj != null)
                 {
                     str = string.Format(str, GameUtil.GetFormattedRoundedJoules(obj.electricity_available), GameUtil.GetFormattedRoundedJoules(obj.electricity_capacity));
+                }
+                return str;
+            };
+            return s;
+        }
+
+        public static StatusItem MakeKillsStatusItem()
+        {
+            var s = new StatusItem("LaserKills", "BUILDING", string.Empty, StatusItem.IconType.Info, NotificationType.Neutral, allow_multiples: false, OverlayModes.None.ID);
+            s.resolveStringCallback = delegate (string str, object data)
+            {
+                MeteorDefenseLaser obj = (MeteorDefenseLaser)data;
+                if (obj != null)
+                {
+                    str = string.Format(str, obj.kills);
                 }
                 return str;
             };
@@ -204,6 +222,7 @@ namespace rlane
             energyConsumer.UpdatePoweredStatus();
             operational.SetActive(true);
             selectable.AddStatusItem(charge_status, this);
+            selectable.AddStatusItem(kills_status, this);
         }
 
         public void SetupBeam()
@@ -321,6 +340,7 @@ namespace rlane
             {
                 ShowExplosion(comet);
                 Util.KDestroyGameObject(comet.gameObject);
+                kills += 1;
             }
             else
             {
