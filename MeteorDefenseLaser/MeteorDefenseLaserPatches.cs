@@ -36,18 +36,7 @@ namespace rlane
     {
         private static void Prefix(Comet __instance)
         {
-            MeteorDefenseLaser.comet_tracker.Add(__instance);
+            __instance.FindOrAdd<TrackedComet>();
         }
     }
-
-    // Also seems to be called for things that aren't comets.
-    [HarmonyPatch(typeof(Comet), "OnCleanUp")]
-    internal class MeteorDefenseLaser_Comet_OnCleanUp
-    {
-        private static void Prefix(Comet __instance)
-        {
-            MeteorDefenseLaser.comet_tracker.Remove(__instance);
-        }
-    }
-    
 }

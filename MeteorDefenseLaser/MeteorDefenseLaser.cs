@@ -114,6 +114,23 @@ namespace rlane
         }
     }
 
+    public class TrackedComet : KMonoBehaviour
+    {
+        protected override void OnSpawn()
+        {
+            Debug.Assert(MeteorDefenseLaser.comet_tracker != null);
+            Debug.Assert(this.GetComponent<Comet>() != null);
+            MeteorDefenseLaser.comet_tracker.Add(this.GetComponent<Comet>());
+        }
+
+        protected override void OnCleanUp()
+        {
+            Debug.Assert(MeteorDefenseLaser.comet_tracker != null);
+            Debug.Assert(this.GetComponent<Comet>() != null);
+            MeteorDefenseLaser.comet_tracker.Remove(this.GetComponent<Comet>());
+        }
+    }
+
     public class MeteorDefenseLaser : KMonoBehaviour, ISim33ms
     {
         public static CometTracker comet_tracker = new CometTracker();
