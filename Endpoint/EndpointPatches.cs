@@ -1,7 +1,7 @@
 ﻿using Harmony;
 using Database;
 
-// TODO: Add option to leave pilot or passengers on Endpoint.
+// TODO: Leave duplicants on Endpoint if option selected.
 // TODO: Add trait to new duplicants if previously rescued.
 // TODO: Add main menu option to see rescued duplicants.
 
@@ -21,6 +21,24 @@ namespace Endpoint
             {
                 __instance.destinations.Add(new SpaceDestination(__instance.destinations.Count, "Endpoint", DISTANCE));
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(CommandModule), "OnSpawn")]
+    internal class Endpoint_CommandModule_OnSpawn
+    {
+        private static void Postfix(CommandModule __instance)
+        {
+            __instance.FindOrAdd<EndpointTransport>();
+        }
+    }
+
+    [HarmonyPatch(typeof(TouristModule), "OnSpawn")]
+    internal class Endpoint_TouristModule_OnSpawn
+    {
+        private static void Postfix(TouristModule __instance)
+        {
+            __instance.FindOrAdd<EndpointTransport>();
         }
     }
 }
