@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alarm", "Alarm\Alarm.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeteorDefenseLaser", "MeteorDefenseLaser\MeteorDefenseLaser.csproj", "{640EC022-433E-49E2-9A86-7C79D6E02BBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Endpoint", "Endpoint\Endpoint.csproj", "{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{640EC022-433E-49E2-9A86-7C79D6E02BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{640EC022-433E-49E2-9A86-7C79D6E02BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{640EC022-433E-49E2-9A86-7C79D6E02BBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
