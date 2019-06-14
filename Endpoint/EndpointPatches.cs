@@ -1,7 +1,7 @@
 ﻿using Harmony;
 using Database;
+using UnityEngine;
 
-// TODO: Leave duplicants on Endpoint if option selected.
 // TODO: Add trait to new duplicants if previously rescued.
 // TODO: Add main menu option to see rescued duplicants.
 
@@ -40,5 +40,20 @@ namespace Endpoint
         {
             __instance.FindOrAdd<EndpointTransport>();
         }
+    }
+
+    [HarmonyPatch(typeof(Spacecraft), "ProgressMission")]
+    internal class Endpoint_Spacecraft_ProgressMission
+    {
+        private static void Postfix(Spacecraft __instance, float deltaTime)
+        {
+            bool has_reached_destination = (__instance.state == Spacecraft.MissionState.Underway || __instance.state == Spacecraft.MissionState.WaitingToLand || __instance.state == Spacecraft.MissionState.Landing) && __instance.GetTimeLeft() <= __instance.GetDuration() / 2;
+            var destination = SpacecraftManager.instance.GetSpacecraftDestination(__instance.id);
+            foreach (GameObject item in AttachableBuilding.GetAttachedNetwork(__instance.launchConditions.GetComponent<AttachableBuilding>()))
+            {
+                item.GetComponent<EndpointTransport>()?.SetReachedDestination(has_reached_destination, destination);
+            }
+        }
+
     }
 }
