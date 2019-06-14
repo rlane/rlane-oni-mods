@@ -1,8 +1,8 @@
 ﻿using Harmony;
 using Database;
 using UnityEngine;
-
-// TODO: Add main menu option to see rescued duplicants.
+using System.Linq;
+using System.Text;
 
 namespace Endpoint
 {
@@ -85,6 +85,35 @@ namespace Endpoint
                 }
                 __instance.Traits.Add(trait);
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(MainMenu), "OnPrefabInit")]
+    internal class Endpoint_MainMenu_OnPrefabInit
+    {
+        private static void Postfix(MainMenu __instance, KButton ___buttonPrefab, GameObject ___buttonParent)
+        {
+            KButton kButton = Util.KInstantiateUI<KButton>(___buttonPrefab.gameObject, ___buttonParent, force_active: true);
+            kButton.onClick += () => {
+                ConfirmDialogScreen confirmDialogScreen = (ConfirmDialogScreen)KScreenManager.Instance.StartScreen(ScreenPrefabs.Instance.ConfirmDialogScreen.gameObject, Global.Instance.globalCanvas);
+                var text = new StringBuilder();
+                text.AppendLine("Duplicants rescued:");
+                var state = EndpointState.Load();
+                foreach (var item in from x in state.times_rescued orderby -x.Value, x.Key select x)
+                {
+                    if (item.Value == 1)
+                    {
+                        text.AppendLine(item.Key);
+                    } else
+                    {
+                        text.AppendLine(item.Key + " x" + item.Value);
+                    }
+                }
+                confirmDialogScreen.PopupConfirmDialog(text.ToString(), null, null, null, null, "Endpoint Population");
+            };
+            LocText loctext = kButton.GetComponentInChildren<LocText>();
+            loctext.text = "ENDPOINT";
+            loctext.fontSize = 14.0f;
         }
     }
 }
