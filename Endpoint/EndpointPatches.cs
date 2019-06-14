@@ -2,7 +2,6 @@
 using Database;
 using UnityEngine;
 
-// TODO: Add trait to new duplicants if previously rescued.
 // TODO: Add main menu option to see rescued duplicants.
 
 namespace Endpoint
@@ -67,6 +66,25 @@ namespace Endpoint
                 item.GetComponent<EndpointTransport>()?.SetReachedDestination(has_reached_destination, destination);
             }
         }
+    }
 
+    [HarmonyPatch(typeof(MinionStartingStats), "GenerateTraits")]
+    internal class Endpoint_MinionStartingStats_GenerateTraits
+    {
+        private static void Postfix(MinionStartingStats __instance)
+        {
+            var name = __instance.Name;
+            var state = EndpointState.Load();
+            if (state.times_rescued.ContainsKey(name))
+            {
+                int count = state.times_rescued[name];
+                var trait = new Klei.AI.Trait("Rescued", "Rescued", "A previous iteration of this duplicant visited the great printing pod in the sky (x" + count + ").", 0, true, null, true, true);
+                foreach (var attribute in TUNING.DUPLICANTSTATS.DISTRIBUTED_ATTRIBUTES)
+                {
+                    trait.Add(new Klei.AI.AttributeModifier(attribute, state.times_rescued[name], "Rescued x" + count));
+                }
+                __instance.Traits.Add(trait);
+            }
+        }
     }
 }
