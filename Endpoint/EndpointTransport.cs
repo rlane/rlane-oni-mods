@@ -59,6 +59,7 @@ namespace Endpoint
                 {
                     var storage = GetComponent<MinionStorage>();
                     var ids = storage.GetStoredMinionInfo().Select((x) => x.id).ToList();
+                    var state = EndpointState.Load();
                     foreach (var id in ids)
                     {
                         var minion = storage.DeserializeMinion(id, transform.position);
@@ -74,7 +75,14 @@ namespace Endpoint
                         Components.LiveMinionIdentities.Add(identity);
                         Components.LiveMinionIdentities.Remove(identity);
                         Game.Instance.userMenu.Refresh(gameObject);
+                        // Record duplicant as rescued in the state file.
+                        if (!state.times_rescued.ContainsKey(identity.name))
+                        {
+                            state.times_rescued[identity.name] = 0;
+                        }
+                        state.times_rescued[identity.name] += 1;
                     }
+                    state.Save();
                 }
             }
         }

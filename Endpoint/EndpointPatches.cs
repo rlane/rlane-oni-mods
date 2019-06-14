@@ -7,6 +7,19 @@ using UnityEngine;
 
 namespace Endpoint
 {
+    class Endpointmain
+    {
+        public static void OnLoad()
+        {
+            Debug.Log("Endpoint state path: " + EndpointState.Filename());
+            if (!System.IO.File.Exists(EndpointState.Filename()))
+            {
+                Debug.Log("endpoint_state.yaml file not found. Creating it.");
+                new EndpointState().Save();
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(SpacecraftManager), "OnSpawn")]
     internal class Endpoint_SpacecraftManager_OnSpawn
     {
