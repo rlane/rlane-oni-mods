@@ -120,4 +120,26 @@ namespace Endpoint
             loctext.fontSize = 14.0f;
         }
     }
+
+    [HarmonyPatch(typeof(GameFlowManager.StatesInstance), "CheckForGameOver")]
+    internal class Endpoint_GameFlowManager_StatesInstance_CheckForGameOver
+    {
+        private static bool Prefix()
+        {
+            Debug.Log("Endpoint_GameFlowManager_StatesInstance_CheckForGameOver Prefix HasStoredMinions()=" + HasStoredMinions());
+            return !HasStoredMinions();
+        }
+
+        static bool HasStoredMinions()
+        {
+            foreach (MinionStorage item in Components.MinionStorages.Items)
+            {
+                if (item.GetStoredMinionInfo().Count > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }
