@@ -6,10 +6,11 @@ namespace Endpoint
 {
     class EndpointTransport : KMonoBehaviour, ISidescreenButtonControl
     {
-        // TODO: Preserve across save/load.
-        bool stay_at_destination;
+        [KSerialization.Serialize]
+        public bool stay_at_destination;
 
-        bool has_reached_destination;
+        [KSerialization.Serialize]
+        public bool has_reached_destination;
 
         public string SidescreenTitleKey => "STRINGS.UI.UISIDESCREENS.ENDPOINTTRANSPORT.TITLE";
 

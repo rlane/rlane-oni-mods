@@ -37,8 +37,8 @@ namespace Endpoint
         }
     }
 
-    [HarmonyPatch(typeof(CommandModule), "OnSpawn")]
-    internal class Endpoint_CommandModule_OnSpawn
+    [HarmonyPatch(typeof(CommandModule), "OnPrefabInit")]
+    internal class Endpoint_CommandModule_OnPrefabInit
     {
         private static void Postfix(CommandModule __instance)
         {
@@ -46,8 +46,8 @@ namespace Endpoint
         }
     }
 
-    [HarmonyPatch(typeof(TouristModule), "OnSpawn")]
-    internal class Endpoint_TouristModule_OnSpawn
+    [HarmonyPatch(typeof(TouristModule), "OnPrefabInit")]
+    internal class Endpoint_TouristModule_OnPrefabInit
     {
         private static void Postfix(TouristModule __instance)
         {
