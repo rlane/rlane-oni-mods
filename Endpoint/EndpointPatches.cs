@@ -4,7 +4,6 @@ using UnityEngine;
 using System.Linq;
 using System.Text;
 
-// TODO: Fix "Colony Lost" message.
 // TODO: Display message when a duplicant is rescued.
 
 namespace Endpoint
@@ -20,6 +19,10 @@ namespace Endpoint
                 new EndpointState().Save();
             }
             Strings.Add("STRINGS.UI.UISIDESCREENS.ENDPOINTTRANSPORT.TITLE", "Transport Options");
+            STRINGS.MISC.NOTIFICATIONS.COLONYLOST.NAME = "Game over";
+            STRINGS.MISC.NOTIFICATIONS.COLONYLOST.TOOLTIP = "All Duplicants are rescued, incapacitated, or dead";
+            STRINGS.UI.COLONYLOSTSCREEN.COLONYLOST = "GAME OVER";
+            STRINGS.UI.COLONYLOSTSCREEN.COLONYLOSTDESCRIPTION  = "No duplicants remain on this asteroid.";
         }
     }
 
