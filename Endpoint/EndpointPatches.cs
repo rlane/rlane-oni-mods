@@ -4,6 +4,9 @@ using UnityEngine;
 using System.Linq;
 using System.Text;
 
+// TODO: Fix "Colony Lost" message.
+// TODO: Display message when a duplicant is rescued.
+
 namespace Endpoint
 {
     class Endpointmain
