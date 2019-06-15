@@ -11,8 +11,7 @@ namespace Endpoint
 
         bool has_reached_destination;
 
-        // TODO: Fix missing string.
-        public string SidescreenTitleKey => "Transport Options";
+        public string SidescreenTitleKey => "STRINGS.UI.UISIDESCREENS.ENDPOINTTRANSPORT.TITLE";
 
         public string SidescreenStatusMessage
         {

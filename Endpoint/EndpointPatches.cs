@@ -16,6 +16,7 @@ namespace Endpoint
                 Debug.Log("endpoint_state.yaml file not found. Creating it.");
                 new EndpointState().Save();
             }
+            Strings.Add("STRINGS.UI.UISIDESCREENS.ENDPOINTTRANSPORT.TITLE", "Transport Options");
         }
     }
 
