@@ -78,7 +78,7 @@ namespace Endpoint
     {
         private static void Postfix(MinionStartingStats __instance)
         {
-            var name = __instance.Name;
+            var name = __instance.NameStringKey;
             var state = EndpointState.Load();
             if (state.times_rescued.ContainsKey(name))
             {

@@ -64,7 +64,8 @@ namespace Endpoint
                     {
                         var minion = storage.DeserializeMinion(id, transform.position);
                         var identity = minion.GetComponent<MinionIdentity>();
-                        Debug.Log("Transported " + minion.name + " to " + destination.type);
+                        var name = identity.nameStringKey;
+                        Debug.Log("Transported " + name + " to " + destination.type);
                         // Delete duplicant.
                         minion.GetComponent<Schedulable>().GetSchedule().Unassign(minion.GetComponent<Schedulable>());
                         identity.GetSoleOwner().UnassignAll();
@@ -79,11 +80,11 @@ namespace Endpoint
                         Components.LiveMinionIdentities.Remove(identity);
                         Game.Instance.userMenu.Refresh(gameObject);
                         // Record duplicant as rescued in the state file.
-                        if (!state.times_rescued.ContainsKey(identity.name))
+                        if (!state.times_rescued.ContainsKey(name))
                         {
-                            state.times_rescued[identity.name] = 0;
+                            state.times_rescued[name] = 0;
                         }
-                        state.times_rescued[identity.name] += 1;
+                        state.times_rescued[name] += 1;
                     }
                     state.Save();
                 }
