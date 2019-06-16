@@ -65,12 +65,15 @@ namespace Endpoint
                         var minion = storage.DeserializeMinion(id, transform.position);
                         var identity = minion.GetComponent<MinionIdentity>();
                         Debug.Log("Transported " + minion.name + " to " + destination.type);
+                        // Delete duplicant.
                         minion.GetComponent<Schedulable>().GetSchedule().Unassign(minion.GetComponent<Schedulable>());
                         identity.GetSoleOwner().UnassignAll();
                         identity.GetEquipment().UnequipAll();
                         Components.MinionAssignablesProxy.Remove(identity.assignableProxy.Get());
                         Components.MinionResumes.Remove(minion.GetComponent<MinionResume>());
                         minion.gameObject.SetActive(false);
+                        // Show message.
+                        Messenger.Instance.QueueMessage(new EndpointMessage(minion.name));
                         // Hacks to avoid crash in SkillsScreen.
                         Components.LiveMinionIdentities.Add(identity);
                         Components.LiveMinionIdentities.Remove(identity);
@@ -85,6 +88,50 @@ namespace Endpoint
                     state.Save();
                 }
             }
+        }
+    }
+
+    class EndpointMessage : Message
+    {
+        [Serialize]
+        private string name;
+
+        public EndpointMessage(string name)
+        {
+            this.name = name;
+        }
+
+        public EndpointMessage()
+        {
+        }
+
+        public override string GetSound()
+        {
+            return null;
+        }
+
+        public override string GetMessageBody()
+        {
+            return string.Empty;
+        }
+
+        public override string GetTooltip()
+        {
+            return "Future iterations of " + name + " will receive a boost to all attributes";
+        }
+
+        public override string GetTitle()
+        {
+            return "Duplicant arrived at Endpoint";
+        }
+
+        public override bool ShowDialog()
+        {
+            return false;
+        }
+
+        public override void OnClick()
+        {
         }
     }
 }
