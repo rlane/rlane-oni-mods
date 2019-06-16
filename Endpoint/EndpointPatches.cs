@@ -27,7 +27,7 @@ namespace Endpoint
     [HarmonyPatch(typeof(SpacecraftManager), "OnSpawn")]
     internal class Endpoint_SpacecraftManager_OnSpawn
     {
-        const int DISTANCE = 5;
+        const int DISTANCE = 9;
 
         private static void Postfix(SpacecraftManager __instance)
         {

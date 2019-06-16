@@ -8,7 +8,7 @@ Install these mods from the [Steam Workshop](https://steamcommunity.com/profiles
 
 Escape the asteroid! You can now send duplicants on a one-way flight to Endpoint, a habitable world populated by other survivors. New duplicants gain a +1 bonus to all attributes for each time their type been rescued.
 
-- A special terrestrial planet named "Endpoint" is added at 60000 km.
+- A special terrestrial planet named "Endpoint" is added at 100000 km.
 - Command and Sightseeing modules gain the option to leave duplicants at Endpoint. If set on a Command module the rocket will still return on autopilot.
 - The new "Endpoint" button on the main menu lists all the duplicants you've rescued this way.
 
