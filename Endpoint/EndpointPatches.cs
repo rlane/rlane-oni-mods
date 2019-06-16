@@ -127,7 +127,6 @@ namespace Endpoint
     {
         private static bool Prefix()
         {
-            Debug.Log("Endpoint_GameFlowManager_StatesInstance_CheckForGameOver Prefix HasStoredMinions()=" + HasStoredMinions());
             return !HasStoredMinions();
         }
 
