@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using System.Collections.Generic;
+using System;
 
 namespace rlane
 {
@@ -29,6 +30,38 @@ namespace rlane
             List<string> ls = new List<string>((string[])Database.Techs.TECH_GROUPING["LogicCircuits"]);
             ls.Add(AlarmConfig.ID);
             Database.Techs.TECH_GROUPING["LogicCircuits"] = (string[])ls.ToArray();
+        }
+    }
+
+    [HarmonyPatch(typeof(DetailsScreen), "SetTitle", new Type[] { typeof(int) })]
+    internal class Alarm_DetailsScreen_SetTitle
+    {
+        private static void Postfix(DetailsScreen __instance, EditableTitleBar ___TabTitle)
+        {
+            if (___TabTitle != null)
+            {
+                var alarm = __instance.target.GetComponent<Alarm>();
+                if (alarm != null)
+                {
+                    ___TabTitle.SetUserEditable(editable: true);
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(DetailsScreen), "OnNameChanged")]
+    internal class Alarm_DetailsScreen_OnNameChanged
+    {
+        private static void Postfix(DetailsScreen __instance, string newName)
+        {
+            if (!string.IsNullOrEmpty(newName))
+            {
+                var alarm = __instance.target.GetComponent<Alarm>();
+                if (alarm != null)
+                {
+                    alarm.SetName(newName);
+                }
+            }
         }
     }
 }

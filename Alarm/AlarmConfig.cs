@@ -44,17 +44,17 @@ namespace rlane
         public override void DoPostConfigureComplete(GameObject go)
         {
             GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
-            go.GetComponent<KPrefabID>().prefabInitFn += gameObject => new AlarmStateMachine.Instance(gameObject.GetComponent<KPrefabID>()).StartSM();
             go.AddOrGetDef<LightController.Def>();
             go.AddOrGet<Alarm>();
             go.AddOrGet<AlarmBrightnessSlider>();
         }
     }
 
-    class Alarm : KMonoBehaviour
+    class Alarm : StateMachineComponent<Alarm.StatesInstance>
     {
         protected override void OnSpawn()
         {
+            base.smi.StartSM();
             Light2D light2D = this.FindOrAddComponent<Light2D>();
             light2D.overlayColour = LIGHT2D.FLOORLAMP_OVERLAYCOLOR;
             light2D.Color = ColorForElement(GetComponent<PrimaryElement>().Element, GetComponent<AlarmBrightnessSlider>().brightness);
@@ -107,6 +107,60 @@ namespace rlane
         {
             this.GetComponent<Light2D>().Color = ColorForElement(GetComponent<PrimaryElement>().Element, brightness);
         }
+
+        public void SetName(string name)
+        {
+            KSelectable component = GetComponent<KSelectable>();
+            base.name = name;
+            if (component != null)
+            {
+                component.SetName(name);
+            }
+            base.gameObject.name = name;
+            NameDisplayScreen.Instance.UpdateName(base.gameObject);
+        }
+
+
+        public static StatusItem alarm_status_item = MakeStatusItem();
+
+        public static StatusItem MakeStatusItem()
+        {
+            StatusItem status_item = new StatusItem("Alarm", "BUILDING", string.Empty, StatusItem.IconType.Exclamation, NotificationType.BadMinor, allow_multiples: false, OverlayModes.None.ID);
+            status_item.AddNotification();
+            return status_item;
+        }
+
+        public class StatesInstance : GameStateMachine<States, StatesInstance, Alarm, object>.GameInstance
+        {
+            public StatesInstance(Alarm master)
+                : base(master)
+            {
+            }
+        }
+
+        public class States : GameStateMachine<States, StatesInstance, Alarm, object>
+        {
+            public State Off;
+            public State On;
+
+            public override void InitializeStates(out BaseState defaultState)
+            {
+                defaultState = Off;
+
+                Off
+                    .PlayAnim("off")
+                    .EventTransition(GameHashes.OperationalChanged, On, smi => smi.GetComponent<Operational>().IsOperational);
+                On
+                    .PlayAnim("on")
+                    .ToggleLoopingSound(GlobalAssets.GetSound("YellowAlert_LP"))
+                    .Enter("SetActive", smi =>
+                    {
+                        smi.GetComponent<Operational>().SetActive(true, false);
+                    })
+                    .ToggleStatusItem(alarm_status_item)
+                    .EventTransition(GameHashes.OperationalChanged, Off, smi => !smi.GetComponent<Operational>().IsOperational);
+            }
+        }
     }
 
     [SerializationConfig(MemberSerialization.OptIn)]
@@ -148,44 +202,6 @@ namespace rlane
         public string GetSliderTooltipKey(int index)
         {
             return "STRINGS.UI.UISIDESCREENS.ALARM.TOOLTIP";
-        }
-    }
-
-    public class AlarmStateMachine : GameStateMachine<AlarmStateMachine, AlarmStateMachine.Instance>
-    {
-        public State Off;
-        public State On;
-
-        public static StatusItem alarm_status_item = MakeStatusItem();
-
-        public static StatusItem MakeStatusItem()
-        {
-            StatusItem status_item = new StatusItem("Alarm", "BUILDING", string.Empty, StatusItem.IconType.Exclamation, NotificationType.BadMinor, allow_multiples: false, OverlayModes.None.ID);
-            status_item.AddNotification();
-            return status_item;
-        }
-
-        public override void InitializeStates(out BaseState defaultState)
-        {
-            defaultState = Off;
-
-            Off
-                .PlayAnim("off")
-                .EventTransition(GameHashes.OperationalChanged, On, smi => smi.GetComponent<Operational>().IsOperational);
-            On
-                .PlayAnim("on")
-                .ToggleLoopingSound(GlobalAssets.GetSound("YellowAlert_LP"))
-                .Enter("SetActive", smi =>
-                {
-                    smi.GetComponent<Operational>().SetActive(true, false);
-                })
-                .ToggleStatusItem(alarm_status_item)
-                .EventTransition(GameHashes.OperationalChanged, Off, smi => !smi.GetComponent<Operational>().IsOperational);
-        }
-
-        public new class Instance : GameInstance
-        {
-            public Instance(IStateMachineTarget master) : base(master) { }
         }
     }
 }
