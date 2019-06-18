@@ -45,6 +45,8 @@ Colors:
 - Niobium: Purple
 - Thermium: Orange
 
+Change the alarm's name by clicking on the pencil icon in the details sidescreen, as for a duplicant or storage container. This name will be visible in the notification tooltip.
+
 Sample uses:
 
 - Water reservoir low.
