@@ -52,6 +52,8 @@ namespace rlane
 
     class Alarm : StateMachineComponent<Alarm.StatesInstance>
     {
+        public static StatusItem alarm_status_item = null;
+
         protected override void OnSpawn()
         {
             base.smi.StartSM();
@@ -65,6 +67,21 @@ namespace rlane
             light2D.shape = LightShape.Circle;
             light2D.drawOverlay = true;
             light2D.Lux = 1800;
+        }
+
+        protected override void OnPrefabInit()
+        {
+            base.OnPrefabInit();
+            InitializeStatusItems();
+        }
+
+        public static void InitializeStatusItems()
+        {
+            if (alarm_status_item == null)
+            {
+                alarm_status_item = new StatusItem("Alarm", "BUILDING", string.Empty, StatusItem.IconType.Exclamation, NotificationType.BadMinor, allow_multiples: false, OverlayModes.None.ID);
+                alarm_status_item.AddNotification();
+            }
         }
 
         public Color ColorForElement(Element element, float brightness)
@@ -118,16 +135,6 @@ namespace rlane
             }
             base.gameObject.name = name;
             NameDisplayScreen.Instance.UpdateName(base.gameObject);
-        }
-
-
-        public static StatusItem alarm_status_item = MakeStatusItem();
-
-        public static StatusItem MakeStatusItem()
-        {
-            StatusItem status_item = new StatusItem("Alarm", "BUILDING", string.Empty, StatusItem.IconType.Exclamation, NotificationType.BadMinor, allow_multiples: false, OverlayModes.None.ID);
-            status_item.AddNotification();
-            return status_item;
         }
 
         public class StatesInstance : GameStateMachine<States, StatesInstance, Alarm, object>.GameInstance
