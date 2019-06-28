@@ -24,6 +24,16 @@ namespace Endpoint
         }
     }
 
+    [HarmonyPatch(typeof(Db), "Initialize")]
+    internal class Endpoint_Db_Initialize
+    {
+        private static void Postfix(Db __instance)
+        {
+            var terra_planet_type = Db.Get().SpaceDestinationTypes.TerraPlanet;
+            Db.Get().SpaceDestinationTypes.Add(new Database.SpaceDestinationType("Endpoint", Db.Get().Root, "Endpoint", "A garden planet, inhabited by other survivors.", terra_planet_type.iconSize, terra_planet_type.spriteName, terra_planet_type.elementTable, terra_planet_type.recoverableEntities, terra_planet_type.artifactDropTable));
+        }
+    }
+
     [HarmonyPatch(typeof(SpacecraftManager), "OnSpawn")]
     internal class Endpoint_SpacecraftManager_OnSpawn
     {
@@ -31,9 +41,6 @@ namespace Endpoint
 
         private static void Postfix(SpacecraftManager __instance)
         {
-            var terra_planet_type = Db.Get().SpaceDestinationTypes.TerraPlanet;
-            Db.Get().SpaceDestinationTypes.Add(new Database.SpaceDestinationType("Endpoint", Db.Get().Root, "Endpoint", "A garden planet, inhabited by other survivors.", terra_planet_type.iconSize, terra_planet_type.spriteName, terra_planet_type.elementTable, terra_planet_type.recoverableEntities, terra_planet_type.artifactDropTable));
-
             if (!__instance.destinations.Exists((x) => x.type == "Endpoint"))
             {
                 __instance.destinations.Add(new SpaceDestination(__instance.destinations.Count, "Endpoint", DISTANCE));
