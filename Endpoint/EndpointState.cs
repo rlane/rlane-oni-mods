@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Endpoint
 {
-    class EndpointState : YamlIO<EndpointState>
+    class EndpointState
     {
         public Dictionary<string, int> times_rescued { get; set; }  = new Dictionary<string, int>();
 
@@ -21,7 +21,7 @@ namespace Endpoint
             EndpointState result;
             try
             {
-                result = LoadFile(Filename());
+                result = YamlIO.LoadFile<EndpointState>(Filename());
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace Endpoint
             Debug.Log("Saving Endpoint state: " + ToString());
             try
             {
-                Save(Filename());
+                YamlIO.Save<EndpointState>(this, Filename());
             }
             catch (Exception ex)
             {
