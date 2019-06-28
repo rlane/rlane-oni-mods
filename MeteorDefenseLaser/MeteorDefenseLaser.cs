@@ -134,8 +134,8 @@ namespace rlane
     public class MeteorDefenseLaser : KMonoBehaviour, ISim33ms
     {
         public static CometTracker comet_tracker = new CometTracker();
-        public static StatusItem charge_status = MakeChargeStatusItem();
-        public static StatusItem kills_status = MakeKillsStatusItem();
+        public static StatusItem charge_status;
+        public static StatusItem kills_status;
 
         [MyCmpGet]
         private Rotatable rotatable;
@@ -206,6 +206,24 @@ namespace rlane
                 return str;
             };
             return s;
+        }
+
+        public void InitializeStatusItems()
+        {
+            if (charge_status == null)
+            {
+                charge_status = MakeChargeStatusItem();
+            }
+            if (kills_status == null)
+            {
+                kills_status = MakeKillsStatusItem();
+            }
+        }
+
+        protected override void OnPrefabInit()
+        {
+            base.OnPrefabInit();
+            InitializeStatusItems();
         }
 
         protected override void OnSpawn()
