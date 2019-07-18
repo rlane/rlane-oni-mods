@@ -368,7 +368,7 @@ namespace rlane
             // Use half the heat to ablate the meteor and the rest to warm it.
             var burn_heat_energy = 0.5f * heat_energy;
             var warm_heat_energy = heat_energy - burn_heat_energy;
-            GameUtil.DeltaThermalEnergy(primary_element, warm_heat_energy / 1000/*KJ*/);
+            primary_element.Temperature += GameUtil.CalculateTemperatureChange(primary_element.Element.specificHeatCapacity, primary_element.Mass, warm_heat_energy / 1000/*KJ*/);
             var mass_removed = burn_heat_energy / (1000 * primary_element.Element.specificHeatCapacity * (primary_element.Element.highTemp - primary_element.Temperature));
 
             if (primary_element.Temperature > primary_element.Element.highTemp || primary_element.Mass <= mass_removed)
