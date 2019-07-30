@@ -69,7 +69,6 @@ namespace Endpoint
                         // Delete duplicant.
                         minion.GetComponent<Schedulable>().GetSchedule().Unassign(minion.GetComponent<Schedulable>());
                         identity.GetSoleOwner().UnassignAll();
-                        identity.GetEquipment().UnequipAll();
                         Components.MinionAssignablesProxy.Remove(identity.assignableProxy.Get());
                         Components.MinionResumes.Remove(minion.GetComponent<MinionResume>());
                         minion.gameObject.SetActive(false);
