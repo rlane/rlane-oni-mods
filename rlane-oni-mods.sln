@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeteorDefenseLaser", "Meteo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Endpoint", "Endpoint\Endpoint.csproj", "{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorStackTrace", "ErrorStackTrace\ErrorStackTrace.csproj", "{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACA02594-0E06-41BA-913E-21CA9DAA9BCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
