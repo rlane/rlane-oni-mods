@@ -44,6 +44,14 @@ namespace rlane
         public override void DoPostConfigureComplete(GameObject go)
         {
             GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
+            Light2D light2D = go.AddOrGet<Light2D>();
+            light2D.overlayColour = LIGHT2D.FLOORLAMP_OVERLAYCOLOR;
+            light2D.Range = 3f;
+            light2D.Angle = 0f;
+            light2D.Direction = LIGHT2D.LIGHTBUG_DIRECTION;
+            light2D.Offset = LIGHT2D.FLOORLAMP_OFFSET;
+            light2D.shape = LightShape.Circle;
+            light2D.drawOverlay = true;
             go.AddOrGetDef<LightController.Def>();
             go.AddOrGet<Alarm>();
             go.AddOrGet<AlarmBrightnessSlider>();
@@ -57,16 +65,8 @@ namespace rlane
         protected override void OnSpawn()
         {
             base.smi.StartSM();
-            Light2D light2D = this.FindOrAddComponent<Light2D>();
-            light2D.overlayColour = LIGHT2D.FLOORLAMP_OVERLAYCOLOR;
+            Light2D light2D = GetComponent<Light2D>();
             light2D.Color = ColorForElement(GetComponent<PrimaryElement>().Element, GetComponent<AlarmBrightnessSlider>().brightness);
-            light2D.Range = 3f;
-            light2D.Angle = 0f;
-            light2D.Direction = LIGHT2D.LIGHTBUG_DIRECTION;
-            light2D.Offset = LIGHT2D.FLOORLAMP_OFFSET;
-            light2D.shape = LightShape.Circle;
-            light2D.drawOverlay = true;
-            light2D.Lux = 1800;
         }
 
         protected override void OnPrefabInit()
