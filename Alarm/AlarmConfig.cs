@@ -84,7 +84,7 @@ namespace rlane
             }
         }
 
-        public Color ColorForElement(Element element, float brightness)
+        public static Color ColorForElement(Element element, float brightness)
         {
             if (element.id == SimHashes.Iron)
             {
@@ -113,6 +113,14 @@ namespace rlane
             else if (element.id == SimHashes.TempConductorSolid)
             {
                 return new Color(10 * brightness, 5 * brightness, 0, 1);
+            }
+            else if (element.id == SimHashes.Lead)
+            {
+                return new Color(5 * brightness, 5 * brightness, 6 * brightness, 1);
+            }
+            else if (element.id == SimHashes.Aluminum)
+            {
+                return new Color(10 * brightness, 10 * brightness, 10 * brightness, 1);
             }
             else
             {
