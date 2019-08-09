@@ -27,9 +27,9 @@ namespace rlane
     {
         private static void Prefix(Db __instance)
         {
-            List<string> ls = new List<string>((string[])Database.Techs.TECH_GROUPING["LogicCircuits"]);
+            List<string> ls = new List<string>((string[])Database.Techs.TECH_GROUPING["LogicControl"]);
             ls.Add(AlarmConfig.ID);
-            Database.Techs.TECH_GROUPING["LogicCircuits"] = (string[])ls.ToArray();
+            Database.Techs.TECH_GROUPING["LogicControl"] = (string[])ls.ToArray();
         }
     }
 
