@@ -218,5 +218,10 @@ namespace rlane
         {
             return "STRINGS.UI.UISIDESCREENS.ALARM.TOOLTIP";
         }
+
+        public string GetSliderTooltip()
+        {
+            return Strings.Get("STRINGS.UI.UISIDESCREENS.ALARM.TOOLTIP");
+        }
     }
 }
