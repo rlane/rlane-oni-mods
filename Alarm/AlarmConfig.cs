@@ -23,6 +23,7 @@ namespace rlane
             buildingDef.EnergyConsumptionWhenActive = 10f;
             buildingDef.ViewMode = OverlayModes.Logic.ID;
             buildingDef.AudioCategory = "Metal";
+            buildingDef.LogicInputPorts = LogicOperationalController.CreateSingleInputPortList(new CellOffset(0, 0));
             return buildingDef;
         }
 
@@ -31,19 +32,8 @@ namespace rlane
             go.AddOrGet<LoopingSounds>();
         }
 
-        public override void DoPostConfigurePreview(BuildingDef def, GameObject go)
-        {
-            GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
-        }
-
-        public override void DoPostConfigureUnderConstruction(GameObject go)
-        {
-            GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
-        }
-
         public override void DoPostConfigureComplete(GameObject go)
         {
-            GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
             Light2D light2D = go.AddOrGet<Light2D>();
             light2D.overlayColour = LIGHT2D.FLOORLAMP_OVERLAYCOLOR;
             light2D.Range = 3f;

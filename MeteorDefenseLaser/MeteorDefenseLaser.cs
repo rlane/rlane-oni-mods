@@ -30,6 +30,7 @@ namespace rlane
             buildingDef.PermittedRotations = PermittedRotations.R360;
             buildingDef.Entombable = true;
             buildingDef.Floodable = true;
+            buildingDef.LogicInputPorts = LogicOperationalController.CreateSingleInputPortList(new CellOffset(0, 0));
             GeneratedBuildings.RegisterWithOverlay(OverlayScreen.SolidConveyorIDs, "AutoMiner");
             return buildingDef;
         }
@@ -50,19 +51,16 @@ namespace rlane
 
         public override void DoPostConfigurePreview(BuildingDef def, GameObject go)
         {
-            GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
             AddVisualizer(go, movable: true);
         }
 
         public override void DoPostConfigureUnderConstruction(GameObject go)
         {
-            GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
             AddVisualizer(go, movable: false);
         }
 
         public override void DoPostConfigureComplete(GameObject go)
         {
-            GeneratedBuildings.RegisterLogicPorts(go, LogicOperationalController.INPUT_PORTS_0_0);
             AddVisualizer(go, movable: false);
         }
 
