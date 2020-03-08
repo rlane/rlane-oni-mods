@@ -2,6 +2,12 @@
 
 Install these mods from the [Steam Workshop](https://steamcommunity.com/profiles/76561197980278821/myworkshopfiles/?appid=457140).
 
+## Crash Landing
+
+<img src="CrashLanding/preview.png" height=200px/>
+
+A challenging new world type where your starting base is a spaceship lodged in the surface of an inhospitable asteroid. Basic power and oxygen systems are still working but will run out of resources quickly unless replenished. Temperatures outside your ship are hostile to common crops. Survival is not guaranteed.
+
 ## Endpoint
 
 <img src="Endpoint/preview.png" height=200px/>

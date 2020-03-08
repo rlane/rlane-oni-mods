@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Endpoint", "Endpoint\Endpoi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorStackTrace", "ErrorStackTrace\ErrorStackTrace.csproj", "{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrashLanding", "CrashLanding\CrashLanding.csproj", "{D69ED17E-14D7-4637-887F-02050170CBB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C13F5808-46C0-4915-8E3B-339E1A4A3A2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D69ED17E-14D7-4637-887F-02050170CBB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D69ED17E-14D7-4637-887F-02050170CBB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D69ED17E-14D7-4637-887F-02050170CBB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D69ED17E-14D7-4637-887F-02050170CBB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

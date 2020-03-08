@@ -1,0 +1,23 @@
+biomeNoise: noise/subworldFrozen
+temperatureRange: Hot
+pdWeight: 2
+density:
+  min: 10
+  max: 20
+avoidRadius: 20.0
+minChildCount: 6
+doAvoidPoints: false
+dontRelaxChildren: true
+sampleBehaviour: PoissonDisk
+borderOverride: rocky
+biomes:
+  - name: biomes/CrashLanding/CrashLandingSurface
+    weight: 1
+centralFeature:
+  type: features/generic/StartLocation
+tags:
+  - IgnoreCaveOverride
+  - NoGlobalFeatureSpawning
+  - StartWorld
+  - ErodePointToWorldTop
+zoneType: Sandstone
