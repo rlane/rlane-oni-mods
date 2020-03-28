@@ -22,7 +22,7 @@ os.unlink(ACCOUNT_KEY_PATH)
 @app.route('/generate_upload_url')
 def generate_upload_url():
     bucket = storage_client.get_bucket(APPID + '.appspot.com')
-    filename = 'ruin.%d.yaml' % random.randint(0, 1<<64)
+    filename = 'ruins/%d.yaml' % random.randint(0, 1<<64)
     policy = bucket.generate_upload_policy(
             conditions=[
                 ['eq', '$key', filename],
