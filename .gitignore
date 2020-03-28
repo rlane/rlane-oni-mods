@@ -2,3 +2,6 @@ bin/
 obj/
 .vs/
 oni-libs/
+*.swp
+*.pyc
+venv/
