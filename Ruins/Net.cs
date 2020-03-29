@@ -6,14 +6,17 @@ using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Klei;
 
 namespace Ruins
 {
-    public class Net
+    public static class Net
     {
+        static bool verbose = false;
+        static string server = "https://oni-ruins-test.appspot.com";
+
         public static void Upload(TemplateContainer template)
         {
-            bool verbose = false;
             Debug.Log("Saving ruins");
 
             var stream = new MemoryStream();
@@ -30,19 +33,16 @@ namespace Ruins
 
             string response_data;
             {
-                WebRequest request = WebRequest.Create("https://oni-ruins-test.appspot.com/generate_upload_url");
+                WebRequest request = WebRequest.Create(server + "/generate_upload_url");
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
-                    if (verbose)
-                    {
-                        Debug.Log("HTTP status: " + response.StatusCode);
-                    }
                     response_data = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                    if (verbose)
-                    {
-                        Debug.Log("HTTP response content: " + response_data);
-                    }
                 }
+            }
+
+            if (verbose)
+            {
+                Debug.Log("HTTP response content: " + response_data);
             }
 
             var fields = new Dictionary<String, String>();
@@ -66,12 +66,12 @@ namespace Ruins
             var url = fields["url"];
             fields.Remove("url");
 
+            Debug.Log("Uploading to blob " + url);
             if (verbose)
             {
-                Debug.Log("Found url: " + url);
                 foreach (var entry in fields)
                 {
-                    Debug.Log("Found field " + entry.Key + ": " + entry.Value);
+                    Debug.Log("Field " + entry.Key + ": " + entry.Value);
                 }
             }
 
@@ -111,6 +111,24 @@ namespace Ruins
                     {
                         Debug.Log("Failed to upload ruins: " + obj.Status + " " + obj.Message + " " + new StreamReader(obj.Response.GetResponseStream()).ReadToEnd());
                     }
+                }
+            }
+        }
+
+        public static TemplateContainer Download()
+        {
+            string url;
+            using (var response = WebRequest.Create(server + "/generate_download_url").GetResponse())
+            {
+                url = new StreamReader(response.GetResponseStream()).ReadToEnd();
+            }
+
+            Debug.Log("Downloading blob " + url);
+            using (var response = WebRequest.Create(url).GetResponse())
+            {
+                using (var gzip_stream = new GZipStream(response.GetResponseStream(), CompressionMode.Decompress))
+                {
+                    return new DeserializerBuilder().Build().Deserialize<TemplateContainer>(new StreamReader(gzip_stream));
                 }
             }
         }

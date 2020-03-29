@@ -11,18 +11,37 @@ namespace RuinsCmd
     {
         static void Main(string[] args)
         {
-            if (false) {
-                var input = YamlIO.LoadFile<TemplateContainer>(args[0]);
+            string mode = args[0];
+            if (mode == "mapgen")
+            {
+                if (args.Length != 3)
+                {
+                    throw new ArgumentException("'mapgen' requires 2 arguments");
+                }
+                var input = YamlIO.LoadFile<TemplateContainer>(args[1]);
                 Console.WriteLine("Loaded input");
                 var result = Ruins.Ruins.MakeRuins(input);
                 Console.WriteLine("Created ruins");
-                YamlIO.Save(result, "tmp/ruins-out.yaml");
-                Console.WriteLine("Saved output to tmp/ruins-out.yaml");
+                YamlIO.Save(result, args[2]);
+                Console.WriteLine("Saved output to " + args[2]);
             }
-
-            if (true)
+            else if (mode == "upload")
             {
-                Ruins.Net.Upload(new TemplateContainer());
+                if (args.Length != 2)
+                {
+                    throw new ArgumentException("'upload' requires 1 argument");
+                }
+                var template = YamlIO.LoadFile<TemplateContainer>(args[1]);
+                Ruins.Net.Upload(template);
+            }
+            else if (mode == "download")
+            {
+                if (args.Length != 2)
+                {
+                    throw new ArgumentException("'download' requires 1 argument");
+                }
+                var template = Ruins.Net.Download();
+                YamlIO.Save(template, args[1]);
             }
         }
     }
