@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -69,19 +70,35 @@ namespace Ruins
 
         public static void Upload(TemplateContainer template)
         {
+            bool verbose = false;
             Debug.Log("Saving ruins");
-            var stream = new StringWriter();
-            new SerializerBuilder().Build().Serialize(stream, template);
-            Debug.Log("Serialized ruins length: " + stream.ToString().Length);
+
+            var stream = new MemoryStream();
+            using (var gzip_stream = new GZipStream(stream, CompressionMode.Compress, true))
+            {
+                using (var writer = new StreamWriter(gzip_stream))
+                {
+                    new SerializerBuilder().Build().Serialize(writer, template);
+                }
+            }
+            stream.Seek(0, SeekOrigin.Begin);
+            var file_bytes = stream.ToArray();
+            Debug.Log("Serialized ruins length: " + file_bytes.Length);
 
             string response_data;
             {
                 WebRequest request = WebRequest.Create("https://oni-ruins-test.appspot.com/generate_upload_url");
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
-                    Debug.Log("HTTP status: " + response.StatusCode);
+                    if (verbose)
+                    {
+                        Debug.Log("HTTP status: " + response.StatusCode);
+                    }
                     response_data = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                    Debug.Log("HTTP response content: " + response_data);
+                    if (verbose)
+                    {
+                        Debug.Log("HTTP response content: " + response_data);
+                    }
                 }
             }
 
@@ -106,10 +123,13 @@ namespace Ruins
             var url = fields["url"];
             fields.Remove("url");
 
-            Debug.Log("Found url: " + url);
-            foreach (var entry in fields)
+            if (verbose)
             {
-                Debug.Log("Found field " + entry.Key + ": " + entry.Value);
+                Debug.Log("Found url: " + url);
+                foreach (var entry in fields)
+                {
+                    Debug.Log("Found field " + entry.Key + ": " + entry.Value);
+                }
             }
 
             {
@@ -132,12 +152,17 @@ namespace Ruins
                     writer.Append("Content-Disposition: form-data; name=\"file\"\r\n");
                     writer.Append("Content-Type: \"text/yaml\"\r\n");
                     writer.Append("\r\n");
-                    writer.Append(stream.ToString());
-                    writer.Append($"\r\n--{boundary}--\r\n");
-                    Debug.Log("Multipart body: " + writer.ToString());
+
+                    var prefix_bytes = Encoding.ASCII.GetBytes(writer.ToString());
+                    var postfix_bytes = Encoding.ASCII.GetBytes($"\r\n--{boundary}--\r\n");
+                    var final_stream = new MemoryStream();
+                    final_stream.Write(prefix_bytes, 0, prefix_bytes.Length);
+                    final_stream.Write(file_bytes, 0, file_bytes.Length);
+                    final_stream.Write(postfix_bytes, 0, postfix_bytes.Length);
+
                     try
                     {
-                        webClient.UploadData(url, "POST", encoding.GetBytes(writer.ToString()));
+                        webClient.UploadData(url, "POST", final_stream.ToArray());
                     }
                     catch (WebException obj)
                     {
