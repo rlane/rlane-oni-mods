@@ -22,7 +22,7 @@ namespace RuinsCmd
 
             if (true)
             {
-                Ruins.Ruins.Upload(new TemplateContainer());
+                Ruins.Net.Upload(new TemplateContainer());
             }
         }
     }
