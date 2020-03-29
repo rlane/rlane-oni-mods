@@ -20,11 +20,12 @@ storage.Client().bucket(APPID + '.appspot.com').blob('secrets/service-account.js
 storage_client = storage.Client.from_service_account_json(ACCOUNT_KEY_PATH)
 os.unlink(ACCOUNT_KEY_PATH)
 
+bucket = storage_client.get_bucket(APPID + '.appspot.com')
+
 
 @app.route('/generate_upload_url')
 def generate_upload_url():
-    bucket = storage_client.get_bucket(APPID + '.appspot.com')
-    filename = 'ruins/%d.yaml.gz' % random.randint(0, 1<<64)
+    filename = 'upload/%d.yaml.gz' % random.randint(0, 1<<64)
     expiration = datetime.datetime.utcnow() + datetime.timedelta(seconds=10)
     logging.info('Generating upload URL for blob %s', filename)
     policy = bucket.generate_upload_policy(
@@ -41,6 +42,16 @@ def generate_upload_url():
            'policy': policy['policy'],
            'signature': policy['signature'],
            'Content-Type': 'application/gzip'}})
+
+
+@app.route('/generate_download_url')
+def generate_download_url():
+    blobs = list(bucket.list_blobs(prefix="ruins/"))
+    blob = random.choice(blobs)
+    logging.info("Generating download URL for blob %s", blob.name)
+    return blob.generate_signed_url(
+        expiration=datetime.timedelta(seconds=30), version='v4')
+
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
