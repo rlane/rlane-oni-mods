@@ -39,4 +39,21 @@ namespace Ruins
             ___buttons = new_buttons;
         }
     }
+
+    [HarmonyPatch(typeof(WorldGenSpawner), "PlaceTemplates")]
+    internal class Ruins_WorldGenSpawner_PlaceTemplates
+    {
+        private static void Prefix()
+        {
+            Debug.Log("Downloading Ruins template");
+            var template = Net.Download();
+            Debug.Log("Downloaded template with " + template.buildings.Count + " buildings");
+            template = Ruins.MakeRuins(template);
+            Debug.Log("Generated ruined template with " + template.buildings.Count + " buildings");
+            foreach (var prefab in template.buildings)
+            {
+                SaveGame.Instance.worldGen.SpawnData.buildings.Add(prefab);
+            }
+        }
+    }
 }
