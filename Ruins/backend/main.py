@@ -6,20 +6,25 @@ import random
 import os
 import datetime
 import logging
+import tempfile
 from flask import Flask
 from flask import jsonify
 from google.cloud import storage
 
 
 APPID = 'oni-ruins-test'
-ACCOUNT_KEY_PATH = '/tmp/service-account.json'
 app = Flask(__name__)
 
 
-storage.Client().bucket(APPID + '.appspot.com').blob('secrets/service-account.json').download_to_filename(ACCOUNT_KEY_PATH)
-storage_client = storage.Client.from_service_account_json(ACCOUNT_KEY_PATH)
-os.unlink(ACCOUNT_KEY_PATH)
+def MakeStorageClient():
+    account_key_path = tempfile.mktemp()
+    storage.Client().bucket(APPID + '.appspot.com').blob('secrets/service-account.json').download_to_filename(account_key_path)
+    storage_client = storage.Client.from_service_account_json(account_key_path)
+    os.unlink(account_key_path)
+    return storage_client
 
+
+storage_client = MakeStorageClient()
 bucket = storage_client.get_bucket(APPID + '.appspot.com')
 
 
