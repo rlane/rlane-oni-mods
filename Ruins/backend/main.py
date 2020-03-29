@@ -24,7 +24,7 @@ os.unlink(ACCOUNT_KEY_PATH)
 @app.route('/generate_upload_url')
 def generate_upload_url():
     bucket = storage_client.get_bucket(APPID + '.appspot.com')
-    filename = 'ruins/%d.yaml' % random.randint(0, 1<<64)
+    filename = 'ruins/%d.yaml.gz' % random.randint(0, 1<<64)
     expiration = datetime.datetime.utcnow() + datetime.timedelta(seconds=10)
     logging.info('Generating upload URL for blob %s', filename)
     policy = bucket.generate_upload_policy(
@@ -32,7 +32,7 @@ def generate_upload_url():
             conditions=[
                 ['eq', '$key', filename],
                 ['content-length-range', 0, 1000000],
-                ['eq', '$Content-Type', 'text/yaml']])
+                ['eq', '$Content-Type', 'application/gzip']])
     return jsonify({
         'url': 'https://storage.googleapis.com/' + bucket.name,
         'form': {
@@ -40,7 +40,7 @@ def generate_upload_url():
            'GoogleAccessId': '%s@%s.iam.gserviceaccount.com' % (APPID, APPID),
            'policy': policy['policy'],
            'signature': policy['signature'],
-           'Content-Type': 'text/yaml'}})
+           'Content-Type': 'application/gzip'}})
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
