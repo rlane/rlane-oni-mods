@@ -9,6 +9,7 @@ import logging
 import tempfile
 from flask import Flask
 from flask import jsonify
+from flask import abort
 from google.cloud import storage
 
 
@@ -54,6 +55,8 @@ def generate_upload_url():
 @app.route('/generate_download_url')
 def generate_download_url():
     blobs = list(bucket.list_blobs(prefix="ruins/"))
+    if not blobs:
+        abort(404)
     blob = random.choice(blobs)
     logging.info("Generating download URL for blob %s", blob.name)
     return blob.generate_signed_url(
