@@ -13,7 +13,7 @@ namespace Ruins
     public static class Net
     {
         static bool verbose = false;
-        static string server = "https://oni-ruins-test.appspot.com";
+        static string server = "https://oni-ruins.appspot.com";  // TODO make configurable
 
         public static void Upload(TemplateContainer template)
         {
