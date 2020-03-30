@@ -11,6 +11,7 @@ namespace RuinsCmd
     {
         static void Main(string[] args)
         {
+            Ruins.Ruins.verbose = true;
             string mode = args[0];
             if (mode == "mapgen")
             {
