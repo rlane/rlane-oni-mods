@@ -12,7 +12,9 @@ from flask import jsonify
 from google.cloud import storage
 
 
-APPID = 'oni-ruins-test'
+APPID = os.environ.get('GOOGLE_CLOUD_PROJECT', 'oni-ruins-test')
+
+
 app = Flask(__name__)
 
 
