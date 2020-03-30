@@ -86,6 +86,7 @@ namespace Ruins
             {"GasPermeableMembrane",  1.0},
             {"GlassTile",  1.0},
             {"MetalTile",  1.0},
+            {"PlasticTile",  1.0},
 
             // Tile-like buildings.
             {"FarmTile",  0.5},
@@ -94,6 +95,7 @@ namespace Ruins
             {"WireBridgeHighWattage", 0.5},
             {"InsulationTile",  0.4},
             {"FloorSwitch", 0.5},
+            {"TravelTubeWallBridge", 0.5},
 
             // Backwall buildings
             {"ExteriorWall",  0.3},  // Drywall
@@ -107,6 +109,7 @@ namespace Ruins
             {"FloorLamp", 0.5},
             {"LuxuryBed", 0.5},
             {"Outhouse", 0.5},
+            {"MassageTable", 0.5},
 
             // Big buildings
             {"MetalRefinery", 0.1},
@@ -170,6 +173,9 @@ namespace Ruins
             {"PlanterBox", 0.0},
             {"GasPump", 0.0},
             {"SolidTransferArm", 0.0},
+            {"LiquidHeater", 0.0},
+            {"CO2Scrubber", 0.0},
+            {"FarmStation", 0.0},
 
             // Uninteresting frequent buildings.
             {"PressureDoor", -0.5},
@@ -181,6 +187,7 @@ namespace Ruins
             {"FlowerVaseHanging", -0.5},
             {"Canvas", -0.5},
             {"CanvasWide", -0.5},
+            {"CanvasTall", -0.5},
             {"MarbleSculpture", -0.5},
             {"RationBox", -0.5},
             {"ItemPedestal", -0.5},
@@ -212,6 +219,7 @@ namespace Ruins
             {"LogicTemperatureSensor", -0.5},
             {"LogicGateAND", -0.5},
             {"LogicGateBUFFER", -0.5},
+            {"LogicGateFILTER", -0.5},
             {"GasVentHighPressure", -0.5},
             {"LogicGateNOT", -0.5},
             {"LogicPressureSensorLiquid", -0.5},
@@ -219,6 +227,7 @@ namespace Ruins
             {"LogicTimeOfDaySensor", -0.5},
             {"LogicSwitch", -0.5},
             {"LiquidConduitRadiant", -0.5},
+            {"TravelTubeEntrance", -0.5},
 
             // Extremely frequent, uninteresting buildings.
             {"Ladder", -1.0},
@@ -237,8 +246,10 @@ namespace Ruins
             {"WireBridge", -1.0},
             {"WireRefined", -1.0},
             {"WireRefinedBridge", -1.0},
+            {"TravelTube", -1.0},
 
             // Never place rockets.
+            {"SteamEngine", double.NegativeInfinity},
             {"OxidizerTank", double.NegativeInfinity},
             {"CargoBay", double.NegativeInfinity},
             {"LiquidFuelTank", double.NegativeInfinity},
