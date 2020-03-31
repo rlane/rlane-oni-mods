@@ -17,6 +17,8 @@ APPID = os.environ.get('GOOGLE_CLOUD_PROJECT', 'oni-ruins-test')
 
 
 app = Flask(__name__)
+app.logger.setLevel(logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 
 def MakeStorageClient():
