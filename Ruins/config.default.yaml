@@ -1,3 +1,4 @@
+# Copy this file to config.yaml and edit that copy.
 verbose: false
 server: "https://oni-ruins.appspot.com"
 # The top-scoring N buildings will be placed on the map.
