@@ -12,9 +12,6 @@ namespace Ruins
 {
     public static class Net
     {
-        static bool verbose = false;
-        static string server = "https://oni-ruins.appspot.com";  // TODO make configurable
-
         public static void Upload(TemplateContainer template)
         {
             Debug.Log("Saving ruins");
@@ -33,14 +30,14 @@ namespace Ruins
 
             string response_data;
             {
-                WebRequest request = WebRequest.Create(server + "/generate_upload_url");
+                WebRequest request = WebRequest.Create(Ruins.config.server + "/generate_upload_url");
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
                     response_data = new StreamReader(response.GetResponseStream()).ReadToEnd();
                 }
             }
 
-            if (verbose)
+            if (Ruins.config.verbose)
             {
                 Debug.Log("HTTP response content: " + response_data);
             }
@@ -67,7 +64,7 @@ namespace Ruins
             fields.Remove("url");
 
             Debug.Log("Uploading to blob " + url);
-            if (verbose)
+            if (Ruins.config.verbose)
             {
                 foreach (var entry in fields)
                 {
@@ -118,7 +115,7 @@ namespace Ruins
         public static TemplateContainer Download()
         {
             string url;
-            using (var response = WebRequest.Create(server + "/generate_download_url").GetResponse())
+            using (var response = WebRequest.Create(Ruins.config.server + "/generate_download_url").GetResponse())
             {
                 url = new StreamReader(response.GetResponseStream()).ReadToEnd();
             }

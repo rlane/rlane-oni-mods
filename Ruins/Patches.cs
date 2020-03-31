@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using STRINGS;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -7,6 +8,26 @@ using static KButtonMenu;
 
 namespace Ruins
 {
+    class RuinsMain
+    {
+        public static void OnLoad(string path)
+        {
+            Debug.Log("Ruins mod path: " + path);
+            var default_config_path = path + "/config.default.yaml";
+            var user_config_path = path + "/config.yaml";
+            Ruins.config = RuinsConfig.Load(default_config_path);
+            try
+            {
+                Ruins.config = RuinsConfig.Load(user_config_path);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("Failed to load Ruins config from " + user_config_path + ": " + ex.ToString());
+                Debug.LogWarning("Falling back to default Ruins config");
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(PauseScreen), "OnPrefabInit")]
     internal class Ruins_PauseMenu_OnPrefabInit
     {

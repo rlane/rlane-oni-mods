@@ -1,0 +1,206 @@
+verbose: false
+server: "https://oni-ruins.appspot.com"
+# The top-scoring N buildings will be placed on the map.
+max_buildings: 2000
+# These values are added to a building's score.
+building_scores:
+	# Tile variants.
+	Tile: 1.0
+	MeshTile: 1.0
+	GasPermeableMembrane: 1.0
+	GlassTile: 1.0
+	MetalTile: 1.0
+	PlasticTile: 1.0
+
+	# Tile-like buildings.
+	FarmTile: 0.5
+	HydroponicFarm: 0.5
+	WireRefinedBridgeHighWattage: 0.5
+	WireBridgeHighWattage: 0.5
+	InsulationTile: 0.4
+	FloorSwitch: 0.5
+	TravelTubeWallBridge: 0.5
+
+	# Backwall buildings
+	ExteriorWall: 0.3  # Drywall
+	ThermalBlock: 0.7  # Tempshift plate
+
+	# Buildings often found in duplicant living quarters.
+	DiningTable: 0.5
+	WaterCooler: 0.5
+	MedicalCot: 0.5
+	CeilingLight: 0.5
+	FloorLamp: 0.5
+	LuxuryBed: 0.5
+	Outhouse: 0.5
+	MassageTable: 0.5
+
+	# Big buildings
+	MetalRefinery: 0.1
+	OilRefinery: 0.1
+	AdvancedResearchCenter: 0.1
+	CosmicResearchCenter: 0.1
+	Desalinator: 0.1
+	GlassForge: 0.1
+	GourmetCookingStation: 0.1
+	OxyliteRefinery: 0.1
+	SuitFabricator: 0.1
+	SupermaterialRefinery: 0.1
+	Telescope: 0.1
+	RockCrusher: 0.1
+	LiquidConditioner: 0.1
+
+	# No adjustment for these buildings.
+	Apothecary: 0.0
+	BottleEmptierGas: 0.0
+	Compost: 0.0
+	EggCracker: 0.0
+	GasBottler: 0.0
+	LiquidMiniPump: 0.0
+	Polymerizer: 0.0
+	PowerControlStation: 0.0
+	ResearchCenter: 0.0
+	WaterPurifier: 0.0
+	AirConditioner: 0.0
+	AutoMiner: 0.0
+	Gantry: 0.0
+	PowerTransformerSmall: 0.0
+	CookingStation: 0.0
+	Electrolyzer: 0.0
+	MineralDeoxidizer: 0.0
+	ParkSign: 0.0
+	HydrogenGenerator: 0.0
+	MethaneGenerator: 0.0
+	PetroleumGenerator: 0.0
+	Refrigerator: 0.0
+	FlushToilet: 0.0
+	LiquidPumpingStation: 0.0
+	Shower: 0.0
+	WashSink: 0.0
+	JetSuitLocker: 0.0
+	SteamTurbine2: 0.0
+	Generator: 0.0
+	CreatureFeeder: 0.0
+	ManualGenerator: 0.0
+	RanchStation: 0.0
+	EggIncubator: 0.0
+	Kiln: 0.0
+	ObjectDispenser: 0.0
+	BottleEmptier: 0.0
+	CreatureDeliveryPoint: 0.0
+	BatterySmart: 0.0
+	LiquidReservoir: 0.0
+	LiquidPump: 0.0
+	PowerTransformer: 0.0
+	SuitLocker: 0.0
+	GasReservoir: 0.0
+	PlanterBox: 0.0
+	GasPump: 0.0
+	SolidTransferArm: 0.0
+	LiquidHeater: 0.0
+	CO2Scrubber: 0.0
+	FarmStation: 0.0
+
+	# Uninteresting frequent buildings.
+	PressureDoor: -0.5
+	Door: -0.5
+	ManualPressureDoor: -0.5
+	AirFilter: -0.5
+
+	# Buildings that don't preserve important settings.
+	FlowerVaseHanging: -0.5
+	Canvas: -0.5
+	CanvasWide: -0.5
+	CanvasTall: -0.5
+	MarbleSculpture: -0.5
+	RationBox: -0.5
+	ItemPedestal: -0.5
+
+	# Buildings out-of-place when not connected to conduits/etc.
+	SolidVent: -0.5
+	LiquidVent: -0.5
+	LiquidValve: -0.5
+	GasConduitRadiant: -0.5
+	HighWattageWire: -0.5
+	WireRefinedHighWattage: -0.5
+	LiquidConduitTemperatureSensor: -0.5
+	LiquidConduitElementSensor: -0.5
+	StorageLocker: -0.5
+	GasConduitTemperatureSensor: -0.5
+	GasLogicValve: -0.5
+	SolidLogicValve: -0.5
+	LiquidFilter: -0.5
+	LogicPowerRelay: -0.5
+	GasValve: -0.5
+	GasVent: -0.5
+	SolidConduitOutbox: -0.5
+	LiquidLogicValve: -0.5
+	Switch: -0.5
+	SolidConduitInbox: -0.5
+	LogicElementSensorGas: -0.5
+	LogicPressureSensorGas: -0.5
+	LogicCritterCountSensor: -0.5
+	LogicTemperatureSensor: -0.5
+	LogicGateAND: -0.5
+	LogicGateBUFFER: -0.5
+	LogicGateFILTER: -0.5
+	GasVentHighPressure: -0.5
+	LogicGateNOT: -0.5
+	LogicPressureSensorLiquid: -0.5
+	GasFilter: -0.5
+	LogicTimeOfDaySensor: -0.5
+	LogicSwitch: -0.5
+	LiquidConduitRadiant: -0.5
+	TravelTubeEntrance: -0.5
+
+	# Extremely frequent, uninteresting buildings.
+	Ladder: -1.0
+	FirePole: -1.0
+	GasConduit: -1.0
+	InsulatedGasConduit: -1.0
+	GasConduitBridge: -1.0
+	LiquidConduit: -1.0
+	InsulatedLiquidConduit: -1.0
+	LiquidConduitBridge: -1.0
+	LogicWire: -1.0
+	LogicWireBridge: -1.0
+	SolidConduit: -1.0
+	SolidConduitBridge: -1.0
+	Wire: -1.0
+	WireBridge: -1.0
+	WireRefined: -1.0
+	WireRefinedBridge: -1.0
+	TravelTube: -1.0
+
+	# Never place rockets.
+	SteamEngine: -.inf
+	OxidizerTank: -.inf
+	CargoBay: -.inf
+	LiquidFuelTank: -.inf
+	KeroseneEngine: -.inf
+	ResearchModule: -.inf
+	CommandModule: -.inf
+
+	# Never place POI buildings.
+	TilePOI: -.inf
+	POIFacilityDoor: -.inf
+	FacilityBackWallWindow: -.inf
+	POIBunkerExteriorDoor: -.inf
+	POIDoorInternal: -.inf
+
+	# Other buildings to never place.
+	OilWellCap: -.inf
+	Headquarters: -.inf
+	SuitMarker: -.inf
+	JetSuitMarker: -.inf
+	MonumentBottom: -.inf
+	MonumentMiddle: -.inf
+	MonumentTop: -.inf
+# Zoom for the Perlin noise. Smaller values generate fewer, larger patches.
+perlin_zoom: 0.01
+# Multiplier for the Perlin noise. Larger values give it more impact on the result.
+perlin_factor: 5
+# Standard deviation of the Gaussian distribution added to the score. Higher means more noisy randomness.
+gaussian_sigma: 0.1
+# Radius around the printing pod to avoid placing buildings.
+hq_radius: 10

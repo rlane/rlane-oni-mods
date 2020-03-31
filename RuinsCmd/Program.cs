@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Klei;
-using RuinsCmd;
 
 namespace RuinsCmd
 {
@@ -11,7 +7,7 @@ namespace RuinsCmd
     {
         static void Main(string[] args)
         {
-            Ruins.Ruins.verbose = true;
+            Ruins.Ruins.config = Ruins.RuinsConfig.Load("Ruins/config.default.yaml");
             string mode = args[0];
             if (mode == "mapgen")
             {
