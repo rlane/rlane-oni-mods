@@ -63,7 +63,7 @@ namespace Ruins
             var url = fields["url"];
             fields.Remove("url");
 
-            Debug.Log("Uploading to blob " + url);
+            Debug.Log("Uploading to blob " + url + "/" + fields["key"]);
             if (Ruins.config.verbose)
             {
                 foreach (var entry in fields)

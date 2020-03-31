@@ -38,8 +38,14 @@ namespace Ruins
                 ConfirmDialogScreen confirmDialogScreen = (ConfirmDialogScreen)KScreenManager.Instance.StartScreen(ScreenPrefabs.Instance.ConfirmDialogScreen.gameObject, Global.Instance.globalCanvas);
                 Thread thread = new Thread(new ThreadStart(() =>
                 {
-                    Net.Upload(Ruins.GetBuildings());
-                    Thread.Sleep(1000);
+                    try
+                    {
+                        Net.Upload(Ruins.GetBuildings());
+                        Thread.Sleep(1000);
+                    } catch (Exception e)
+                    {
+                        Debug.LogError("Ruins: Failed to upload template: " + e);
+                    }
                     confirmDialogScreen.Deactivate();
                 }));
                 thread.Start();
@@ -66,14 +72,20 @@ namespace Ruins
     {
         private static void Prefix()
         {
-            Debug.Log("Downloading Ruins template");
-            var template = Net.Download();
-            Debug.Log("Downloaded template with " + template.buildings.Count + " buildings");
-            template = Ruins.MakeRuins(template);
-            Debug.Log("Generated ruined template with " + template.buildings.Count + " buildings");
-            foreach (var prefab in template.buildings)
+            try
             {
-                SaveGame.Instance.worldGen.SpawnData.buildings.Add(prefab);
+                Debug.Log("Downloading Ruins template");
+                var template = Net.Download();
+                Debug.Log("Downloaded template with " + template.buildings.Count + " buildings");
+                template = Ruins.MakeRuins(template);
+                Debug.Log("Generated ruined template with " + template.buildings.Count + " buildings");
+                foreach (var prefab in template.buildings)
+                {
+                    SaveGame.Instance.worldGen.SpawnData.buildings.Add(prefab);
+                }
+            } catch (Exception e)
+            {
+                Debug.LogError("Ruins: failed to download template: " + e);
             }
         }
     }
