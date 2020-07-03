@@ -1,5 +1,4 @@
-﻿// TODO: Remove "Immune Booster" from the tooltip.
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Klei.AI;
 using UnityEngine;
 
