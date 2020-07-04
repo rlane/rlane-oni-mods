@@ -49,15 +49,17 @@ namespace Stimulant
                 Db.Get().Attributes.Digging.Id,
                 Db.Get().Attributes.Construction.Id,
             };
+            var skill_multiplier = 0.25f;
+            var metabolism_multiplier = 0.5f;
             foreach (var attribute in attributes)
             {
                 effect.Add(new AttributeModifier(attribute, 2, effect.Name));
-                effect.Add(new AttributeModifier(attribute, 0.5f, effect.Name, is_multiplier: true));
+                effect.Add(new AttributeModifier(attribute, skill_multiplier, effect.Name, is_multiplier: true));
             }
-            var calorieIncrease = 500 * (5.0f/3);
+            var calorieIncrease = metabolism_multiplier * 1000 * (5.0f/3);
             effect.Add(new AttributeModifier(Db.Get().Amounts.Calories.deltaAttribute.Id, -calorieIncrease, effect.Name));
             //effect.Add(new AttributeModifier("CaloriesMax", calorieIncrease * 1000, effect.Name));
-            effect.Add(new AttributeModifier("AirConsumptionRate", 0.05f, effect.Name));
+            effect.Add(new AttributeModifier("AirConsumptionRate", 0.1f * metabolism_multiplier, effect.Name));
             return effect;
         }
 
