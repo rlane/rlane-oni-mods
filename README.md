@@ -2,6 +2,14 @@
 
 Install these mods from the [Steam Workshop](https://steamcommunity.com/profiles/76561197980278821/myworkshopfiles/?appid=457140).
 
+## Stimulant
+
+A new pill that temporarily boosts a duplicant's physical abilities at the cost of 50% increased oxygen and calorie consumption. It's produced in the Apothecary.
+
+This provides an alternative to taking on new duplicants (and the associated framerate cost).
+
+<img src="Stimulant/preview.png" height=200px/>
+
 ## Crash Landing
 
 <img src="CrashLanding/preview.png" height=200px/>
