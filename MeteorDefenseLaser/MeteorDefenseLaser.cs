@@ -452,7 +452,7 @@ namespace rlane
             if (CameraController.Instance.IsAudibleSound(position, sound))
             {
                 EventInstance instance = KFMOD.BeginOneShot(sound, position);
-                instance.setParameterValue("userVolume_SFX", KPlayerPrefs.GetFloat("Volume_SFX"));
+                instance.setParameterByName("userVolume_SFX", KPlayerPrefs.GetFloat("Volume_SFX"));
                 KFMOD.EndOneShot(instance);
             }
             var fx_position = position;
