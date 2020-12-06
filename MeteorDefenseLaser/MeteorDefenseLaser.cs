@@ -360,8 +360,8 @@ namespace rlane
             var heat_energy = laser_heat_production * dt;
             if (primary_element.Mass > 100)
             {
-                // HACK: Rock comets are hundreds of times more massive than iron comets. Even with the electricity to heat multiplier we couldn't affect them. Boost heat production by 100x.
-                heat_energy *= 100;
+                // HACK: Rock comets are hundreds of times more massive than iron comets. Even with the electricity to heat multiplier we couldn't affect them. Apply heat based on mass (Rock Comets are between 4000kg and 7200kg)
+                heat_energy *= primary_element.Mass / 10;
             }
             // Use half the heat to ablate the meteor and the rest to warm it.
             var burn_heat_energy = 0.5f * heat_energy;
@@ -372,6 +372,14 @@ namespace rlane
             if (primary_element.Temperature > primary_element.Element.highTemp || primary_element.Mass <= mass_removed)
             {
                 ShowExplosion(comet);
+                // Drop Resources! :D - If there is a better way to do this, I'm not surprised but I sure couldn't find it (outseeker)
+                PrimaryElement component = comet.GetComponent<PrimaryElement>();
+                component.Mass = primary_element.Mass;
+                component.Temperature = primary_element.Temperature;
+                Element element = component.Element;
+                Substance substance = element.substance;
+                GameObject go = substance.SpawnResource(comet.transform.GetPosition(), component.Mass, component.Temperature, byte.MaxValue, 0);
+                //Debug.Log("Spawned resource from destroyed comet");
                 Util.KDestroyGameObject(comet.gameObject);
                 kills += 1;
             }
