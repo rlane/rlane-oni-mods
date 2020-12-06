@@ -478,7 +478,18 @@ namespace rlane
             var cell = Grid.PosToCell(position);
             if (SafeCell(cell))
             {
-                Game.Instance.SpawnFX(SpawnFXHashes.BuildingSpark, position, 0f);
+                // if comet type is iron or rock, show appropriate FX. The lil' dust ones just asplode straight away so no FX for them (Comet Name is IronComet or RockComet for all comets, FX names apparently changed since initial naming and don't match up with comet names anymore)
+                //Debug.Log("Comet Name: " + comet.GetComponent<PrimaryElement>().name);
+                if (comet.GetComponent<PrimaryElement>().name is "IronComet")
+                {
+                    Game.Instance.SpawnFX(SpawnFXHashes.MeteorImpactMetal, position, 0f);
+
+                } else if (comet.GetComponent<PrimaryElement>().name is "RockComet") 
+                {
+                    Game.Instance.SpawnFX(SpawnFXHashes.MeteorImpactDirt, position, 0f);
+                }
+                // Alternatively or additionally, show the original spawkly effect used (might make a config option)
+                // Game.Instance.SpawnFX(SpawnFXHashes.BuildingSpark, position, 0f);
             }
         }
 
