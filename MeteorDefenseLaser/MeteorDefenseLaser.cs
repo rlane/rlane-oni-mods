@@ -360,8 +360,8 @@ namespace rlane
             var heat_energy = laser_heat_production * dt;
             if (primary_element.Mass > 100)
             {
-                // HACK: Rock comets are hundreds of times more massive than iron comets. Even with the electricity to heat multiplier we couldn't affect them. Boost heat production by 100x.
-                heat_energy *= 100;
+                // HACK: Rock comets are hundreds of times more massive than iron comets. Even with the electricity to heat multiplier we couldn't affect them. Apply heat based on mass (Rock Comets are between 4000kg and 7200kg)
+                heat_energy *= primary_element.Mass / 10;
             }
             // Use half the heat to ablate the meteor and the rest to warm it.
             var burn_heat_energy = 0.5f * heat_energy;
@@ -372,6 +372,14 @@ namespace rlane
             if (primary_element.Temperature > primary_element.Element.highTemp || primary_element.Mass <= mass_removed)
             {
                 ShowExplosion(comet);
+                // Drop Resources! :D - If there is a better way to do this, I'm not surprised but I sure couldn't find it (outseeker)
+                PrimaryElement component = comet.GetComponent<PrimaryElement>();
+                component.Mass = primary_element.Mass;
+                component.Temperature = primary_element.Temperature;
+                Element element = component.Element;
+                Substance substance = element.substance;
+                GameObject go = substance.SpawnResource(comet.transform.GetPosition(), component.Mass, component.Temperature, byte.MaxValue, 0);
+                //Debug.Log("Spawned resource from destroyed comet");
                 Util.KDestroyGameObject(comet.gameObject);
                 kills += 1;
             }
@@ -470,7 +478,18 @@ namespace rlane
             var cell = Grid.PosToCell(position);
             if (SafeCell(cell))
             {
-                Game.Instance.SpawnFX(SpawnFXHashes.BuildingSpark, position, 0f);
+                // if comet type is iron or rock, show appropriate FX. The lil' dust ones just asplode straight away so no FX for them (Comet Name is IronComet or RockComet for all comets, FX names apparently changed since initial naming and don't match up with comet names anymore)
+                //Debug.Log("Comet Name: " + comet.GetComponent<PrimaryElement>().name);
+                if (comet.GetComponent<PrimaryElement>().name is "IronComet")
+                {
+                    Game.Instance.SpawnFX(SpawnFXHashes.MeteorImpactMetal, position, 0f);
+
+                } else if (comet.GetComponent<PrimaryElement>().name is "RockComet") 
+                {
+                    Game.Instance.SpawnFX(SpawnFXHashes.MeteorImpactDirt, position, 0f);
+                }
+                // Alternatively or additionally, show the original spawkly effect used (might make a config option)
+                // Game.Instance.SpawnFX(SpawnFXHashes.BuildingSpark, position, 0f);
             }
         }
 
