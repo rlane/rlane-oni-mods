@@ -41,6 +41,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\oni-libs\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="FMODUnity">
+      <HintPath>..\oni-libs\FMODUnity.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\oni-libs\UnityEngine.dll</HintPath>
     </Reference>
